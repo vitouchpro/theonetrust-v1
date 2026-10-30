@@ -1,0 +1,38 @@
+import { describe, expect, it } from 'vitest';
+import { EnvValidationError, loadEnv } from './env.ts';
+
+describe('loadEnv', () => {
+  it('applies safe defaults for local development', () => {
+    const env = loadEnv({});
+    expect(env.NODE_ENV).toBe('development');
+    expect(env.API_PORT).toBe(4000);
+    expect(env.CORS_ORIGINS).toEqual(['http://localhost:5173']);
+  });
+
+  it('parses a comma-separated CORS allowlist and trims spaces', () => {
+    const env = loadEnv({ CORS_ORIGINS: 'https://theonetrust.in, https://www.theonetrust.in ,' });
+    expect(env.CORS_ORIGINS).toEqual(['https://theonetrust.in', 'https://www.theonetrust.in']);
+  });
+
+  it.each([
+    ['API_PORT', { API_PORT: 'abc' }],
+    ['API_PORT', { API_PORT: '70000' }],
+    ['NODE_ENV', { NODE_ENV: 'staging' }],
+    ['CORS_ORIGINS', { CORS_ORIGINS: 'not-a-url' }],
+    ['CORS_ORIGINS', { CORS_ORIGINS: ' , ' }],
+  ])('rejects invalid %s', (key, source) => {
+    expect(() => loadEnv(source)).toThrow(EnvValidationError);
+    try {
+      loadEnv(source);
+    } catch (error) {
+      expect((error as EnvValidationError).invalidKeys).toEqual([key]);
+    }
+  });
+
+  it('never echoes the invalid value in the error message', () => {
+    const secretLooking = 'postgres://user:SuperSecret@host/db';
+    expect(() => loadEnv({ CORS_ORIGINS: secretLooking, API_PORT: secretLooking })).toThrow(
+      expect.objectContaining({ message: expect.not.stringContaining('SuperSecret') }),
+    );
+  });
+});

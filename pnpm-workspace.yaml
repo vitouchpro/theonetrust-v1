@@ -1,0 +1,10 @@
+packages:
+  - apps/*
+  - packages/*
+
+# Fail installs that would silently resolve mismatched peers.
+strictPeerDependencies: false
+
+# Packages allowed to run install scripts (supply-chain safety: allowlist only).
+onlyBuiltDependencies:
+  - esbuild
