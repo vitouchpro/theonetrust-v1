@@ -9,7 +9,17 @@ import { spawnSync } from 'node:child_process';
 
 const quick = process.argv.includes('--quick');
 
+/** Same whitespace/conflict-marker check as CI: branch changes vs main, plus uncommitted work. */
+function diffCheckArgs() {
+  for (const ref of [process.env.BASE_REF ?? 'origin/main', 'main']) {
+    const mb = spawnSync('git', ['merge-base', ref, 'HEAD'], { encoding: 'utf8' });
+    if (mb.status === 0) return ['diff', '--check', mb.stdout.trim()];
+  }
+  return ['diff', '--check', 'HEAD'];
+}
+
 const steps = [
+  ['whitespace + conflict markers', 'git', diffCheckArgs()],
   ['format', 'pnpm', ['format:check']],
   ['lint', 'pnpm', ['lint']],
   ['typecheck', 'pnpm', ['typecheck']],

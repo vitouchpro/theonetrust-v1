@@ -1,9 +1,9 @@
 # Charitable Trust Donation Website — Product, UX & Engineering Master Plan
 
-**Planning baseline:** 28 October 2026  
-**Primary build environment:** Claude Desktop → **Code** tab  
-**Frontend:** React + TypeScript + Vite  
-**Product shape:** Public bilingual single-page website + private owner dashboard + separately deployable API/payment service  
+**Planning baseline:** 28 October 2026\
+**Primary build environment:** Claude Desktop → **Code** tab\
+**Frontend:** React + TypeScript + Vite\
+**Product shape:** Public bilingual single-page website + private owner dashboard + separately deployable API/payment service\
 **Payment provider for launch:** Razorpay, subject to merchant account approval and enabled payment methods
 
 > This is an implementation specification, not a claim that the trust is legally eligible for any particular tax benefit or payment method. Replace all `[CONFIRM]` values with verified trust documents and current provider settings before launch. Do not invent trust registrations, statistics, beneficiary stories, project costs, testimonials, or impact figures.
