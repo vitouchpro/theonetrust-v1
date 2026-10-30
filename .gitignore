@@ -1,0 +1,17 @@
+node_modules/
+dist/
+coverage/
+playwright-report/
+test-results/
+blob-report/
+*.tsbuildinfo
+.vite/
+
+# Secrets: never commit real environment files
+.env
+.env.*
+!.env.example
+
+.DS_Store
+*.log
+.claude/settings.local.json
