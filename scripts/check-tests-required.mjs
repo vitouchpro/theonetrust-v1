@@ -66,9 +66,17 @@ function changedFiles(baseRef) {
     add(git(['ls-files', '--cached', '--others', '--exclude-standard']));
     return [...files];
   }
-  if (hasCommit(baseRef)) {
-    const mergeBase = git(['merge-base', baseRef, 'HEAD'])[0];
+  // Resolve the comparison base; fall back to a local main branch when the remote ref is absent.
+  const base = [baseRef, 'main'].find((ref) => hasCommit(ref));
+  if (base) {
+    const mergeBase = git(['merge-base', base, 'HEAD'])[0];
     add(git(['diff', '--name-only', '--diff-filter=ACMR', `${mergeBase}...HEAD`]));
+  } else if (process.env.CI) {
+    // Fail closed: in CI a missing base would silently skip the gate.
+    console.error(
+      `✖ tests-required: base "${baseRef}" not found in CI (checkout needs fetch-depth: 0).`,
+    );
+    process.exit(1);
   } else {
     console.warn(`check-tests-required: base "${baseRef}" not found; checking local changes only.`);
   }
