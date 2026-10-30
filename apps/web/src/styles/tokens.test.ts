@@ -185,6 +185,12 @@ describe('type scale (UX brief §4: mobile @360 → desktop @1440)', () => {
     expect(Math.min(...weights)).toBeGreaterThanOrEqual(400);
   });
 
+  it('Tamil headings use a Unicode serif face, falling back to the Tamil body font', () => {
+    // Legacy non-Unicode fonts such as Bamini break SEO, screen readers and typing (#46).
+    expect(tokens.get('--font-heading-ta')).toBe("'Noto Serif Tamil', var(--font-tamil)");
+    expect(tokens.get('--font-heading-ta')).not.toMatch(/bamini/i);
+  });
+
   it('gives Tamil more line height than English', () => {
     expect(Number(tokens.get('--leading-body-ta'))).toBeGreaterThan(
       Number(tokens.get('--leading-body')),

@@ -54,7 +54,7 @@ test.describe('type scale', () => {
 });
 
 test.describe('fonts', () => {
-  test('Inter, Libre Baskerville and Noto Sans Tamil load from our own origin', async ({
+  test('Inter, Libre Baskerville, Noto Sans Tamil and Noto Serif Tamil load from our own origin', async ({
     page,
     baseURL,
   }) => {
@@ -70,6 +70,7 @@ test.describe('fonts', () => {
         inter: ['16px "Inter Variable"', 'Donate'],
         baskerville: ['700 34px "Libre Baskerville"', 'Theonetrust'],
         tamil: ['16px "Noto Sans Tamil Variable"', 'தமிழ் நன்கொடை'],
+        tamilHeading: ['700 28px "Noto Serif Tamil"', 'தமிழ் தலைப்பு'],
       } as const;
       const out: Record<string, boolean> = {};
       for (const [key, [font, text]] of Object.entries(probes)) {
@@ -79,19 +80,27 @@ test.describe('fonts', () => {
       }
       return out;
     });
-    expect(loaded).toEqual({ inter: true, baskerville: true, tamil: true });
+    expect(loaded).toEqual({ inter: true, baskerville: true, tamil: true, tamilHeading: true });
 
     expect(fontRequests.length).toBeGreaterThan(0);
     const origin = new URL(baseURL!).origin;
     for (const url of fontRequests) expect(new URL(url).origin).toBe(origin);
   });
 
-  test('Tamil text — including headings — renders in Noto Sans Tamil', async ({ page }) => {
+  test('Tamil headings use Noto Serif Tamil; Tamil body and buttons use Noto Sans Tamil', async ({
+    page,
+  }) => {
     await page.goto('/');
     await injectSpecimen(page);
-    for (const selector of ['#tamil-specimen h2', '#tamil-specimen p', 'p[lang="ta"]']) {
-      expect((await computed(page, selector)).fontFamily).toMatch(/^"?Noto Sans Tamil Variable/);
+    for (const selector of ['#tamil-specimen h2', '#tamil-specimen h3', '#inverse-band h3']) {
+      expect((await computed(page, selector)).fontFamily, selector).toMatch(/^"?Noto Serif Tamil/);
     }
+    for (const selector of ['#tamil-specimen p', 'p[lang="ta"]', '[data-check="card"] button']) {
+      expect((await computed(page, selector)).fontFamily, selector).toMatch(
+        /^"?Noto Sans Tamil Variable/,
+      );
+    }
+    // English headings are unaffected.
     expect((await computed(page, 'h1')).fontFamily).toMatch(/^"?Libre Baskerville/);
   });
 });
@@ -218,11 +227,12 @@ test.describe('Tamil specimen at this viewport', () => {
     await page.evaluate(() => {
       document.documentElement.lang = 'ta';
     });
-    for (const selector of ['body', 'h1', '[data-check="card"] button']) {
+    for (const selector of ['body', '[data-check="card"] button']) {
       expect((await computed(page, selector)).fontFamily, selector).toMatch(
         /^"?Noto Sans Tamil Variable/,
       );
     }
+    expect((await computed(page, 'h1')).fontFamily).toMatch(/^"?Noto Serif Tamil/);
     const body = await computed(page, 'body');
     expect(body.lineHeight / body.fontSize).toBeGreaterThanOrEqual(1.75);
   });
@@ -233,7 +243,7 @@ test.describe('Tamil specimen at this viewport', () => {
     await page.goto('/');
     await injectSpecimen(page);
     const styled = await computed(page, '#class-styled');
-    expect(styled.fontFamily).toMatch(/^"?Noto Sans Tamil Variable/);
+    expect(styled.fontFamily).toMatch(/^"?Noto Serif Tamil/);
     expect(styled.lineHeight / styled.fontSize).toBeGreaterThanOrEqual(1.45);
   });
 
