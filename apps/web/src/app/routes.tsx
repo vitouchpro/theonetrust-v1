@@ -6,8 +6,8 @@ import { NotFoundPage } from '../routes/not-found/NotFoundPage.tsx';
 
 /**
  * Route table shared by the browser router and tests.
- * Planned utility routes (see docs/website-plan.md): /donate, /receipt/:token,
- * /manage/:token, /help, /privacy, /terms, /refund-policy, /admin/*.
+ * Planned routes and their Tamil /ta/ mirrors are listed in docs/design/sitemap.md;
+ * sitemap.test.ts fails if a route here is missing from that table.
  */
 export const routes: RouteObject[] = [
   {
