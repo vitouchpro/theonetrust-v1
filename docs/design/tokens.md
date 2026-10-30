@@ -114,8 +114,13 @@ Brand direction: [`docs/ux-design-brief.md`](../ux-design-brief.md) §2–4 (Mid
 
 - Sizes are fluid `clamp()` values in `rem` + `vw`: exact at 360 and 1440 px, smooth in between,
   and they still scale with browser zoom and the user's font-size setting.
-- Tamil uses Noto Sans Tamil with extra leading (`--leading-body-ta` 1.8, `--leading-heading-ta` 1.5);
-  `:lang(ta)` switches font and leading automatically, including headings.
+- Tamil **headings** use **Noto Serif Tamil** (classic printed-Tamil look, `--font-heading-ta`); Tamil
+  body text and buttons use Noto Sans Tamil. Legacy non-Unicode fonts such as Bamini are not used:
+  they break search, screen readers, mobile typing and copy-paste (#46).
+- Tamil uses extra leading (`--leading-body-ta` 1.8, `--leading-heading-ta` 1.5);
+  `:lang(ta)` switches to the Tamil body font, the Tamil heading font and Tamil leading automatically.
+- Tamil headings load only the Tamil subset of Noto Serif Tamil. Latin letters, digits and ₹ inside a
+  Tamil heading fall back to Noto Sans Tamil; add the Latin subset if headings start showing amounts.
 - Weights: 400 / 500 / 600 / 700 only — no thin weights.
 - Fonts are self-hosted (`@fontsource`), split by `unicode-range`, so Tamil glyphs download only on
   pages that show Tamil text and no request goes to a third party.

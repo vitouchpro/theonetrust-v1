@@ -1,6 +1,8 @@
-/* Self-hosted fonts (no third-party requests). unicode-range subsets load only what a page uses. */
+/* Self-hosted fonts (no third-party requests). Most packages split files by unicode-range so a page
+   loads only the scripts it shows; Noto Serif Tamil is imported as its Tamil-only subset file. */
 @import '@fontsource-variable/inter';
 @import '@fontsource-variable/noto-sans-tamil';
+@import '@fontsource/noto-serif-tamil/tamil-700.css'; /* Tamil headings (bold only) */
 @import '@fontsource/libre-baskerville/400.css';
 @import '@fontsource/libre-baskerville/700.css';
 @import './tokens.css';
@@ -68,9 +70,9 @@ small {
 /* Tamil swaps the font and leading TOKENS (not just properties), so any rule or future
    component class that uses var(--font-heading) / var(--leading-heading) gets Tamil values.
    :where() keeps specificity at zero so element and component rules still decide which token
-   applies (headings keep heading leading). --font-tamil is resolved at :root, so no cycle. */
+   applies (headings keep heading leading). --font-tamil and --font-heading-ta are resolved at :root, so there is no cycle. */
 :where(:lang(ta)) {
-  --font-heading: var(--font-tamil);
+  --font-heading: var(--font-heading-ta);
   --font-body: var(--font-tamil);
   --leading-body: var(--leading-body-ta);
   --leading-heading: var(--leading-heading-ta);

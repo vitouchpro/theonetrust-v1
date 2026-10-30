@@ -81,6 +81,9 @@ importers:
       '@fontsource/libre-baskerville':
         specifier: 5.3.0
         version: 5.3.0
+      '@fontsource/noto-serif-tamil':
+        specifier: 5.3.0
+        version: 5.3.0
       '@theonetrust/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
@@ -534,6 +537,9 @@ packages:
 
   '@fontsource/libre-baskerville@5.3.0':
     resolution: {integrity: sha512-IA6OLq36/JWMX70Fha15sri2qWsijFh7hgdDXCRZHjKUHtWarLQoiGilvm7iMqm7HiYFEv9acF3+IuRHO9kUiA==}
+
+  '@fontsource/noto-serif-tamil@5.3.0':
+    resolution: {integrity: sha512-Ksc/mqtACXTPzFQac1DF4xi4Cu4YhMYGQavu/DJX/wNxCIoCD/YUtYlK2tFDGs/uvKa8YbPXvGbIZP/j3C+7pQ==}
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
@@ -2605,6 +2611,8 @@ snapshots:
   '@fontsource-variable/noto-sans-tamil@5.3.0': {}
 
   '@fontsource/libre-baskerville@5.3.0': {}
+
+  '@fontsource/noto-serif-tamil@5.3.0': {}
 
   '@humanfs/core@0.19.2':
     dependencies:
