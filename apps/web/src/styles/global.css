@@ -1,3 +1,8 @@
+/* Self-hosted fonts (no third-party requests). unicode-range subsets load only what a page uses. */
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/noto-sans-tamil';
+@import '@fontsource/libre-baskerville/400.css';
+@import '@fontsource/libre-baskerville/700.css';
 @import './tokens.css';
 
 *,
@@ -18,28 +23,66 @@ body {
   color: var(--color-text);
   font-family: var(--font-body);
   font-size: var(--text-body);
+  font-weight: var(--weight-regular);
   line-height: var(--leading-body);
   overflow-wrap: break-word;
 }
 
-:lang(ta) {
-  font-family: var(--font-tamil);
-  /* Tamil glyphs need extra vertical room to avoid clipping. */
-  line-height: calc(var(--leading-body) + 0.15);
-}
-
+/* ── Headings ─────────────────────────────────────────────────────── */
 h1,
 h2,
 h3 {
   font-family: var(--font-heading);
+  font-weight: var(--weight-bold);
   line-height: var(--leading-heading);
-  color: var(--color-primary);
+  color: var(--color-text-heading);
+  text-wrap: balance;
 }
 
 h1 {
   font-size: var(--text-h1);
 }
 
+h2 {
+  font-size: var(--text-h2);
+}
+
+h3 {
+  font-size: var(--text-h3);
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Long-form reading width — opt in, so heroes, CTAs and admin tables are not narrowed. */
+.prose > * {
+  max-width: var(--measure);
+}
+
+small {
+  font-size: var(--text-small);
+}
+
+/* ── Tamil ────────────────────────────────────────────────────────── */
+/* Tamil swaps the font and leading TOKENS (not just properties), so any rule or future
+   component class that uses var(--font-heading) / var(--leading-heading) gets Tamil values.
+   :where() keeps specificity at zero so element and component rules still decide which token
+   applies (headings keep heading leading). --font-tamil is resolved at :root, so no cycle. */
+:where(:lang(ta)) {
+  --font-heading: var(--font-tamil);
+  --font-body: var(--font-tamil);
+  --leading-body: var(--leading-body-ta);
+  --leading-heading: var(--leading-heading-ta);
+
+  font-family: var(--font-body);
+  line-height: var(--leading-body);
+  /* Long agglutinative words must break inside flex/grid items too (break-word does not
+     shrink their min-content width). */
+  overflow-wrap: anywhere;
+}
+
+/* ── Media ────────────────────────────────────────────────────────── */
 img,
 svg,
 video {
@@ -47,35 +90,91 @@ video {
   height: auto;
 }
 
+/* ── Links and controls ───────────────────────────────────────────── */
 a {
-  color: var(--color-primary);
+  color: var(--color-link);
   text-underline-offset: 0.2em;
 }
 
-:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-offset);
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
 }
 
+button {
+  min-height: var(--control-height);
+  /* Tamil labels may wrap onto two lines; padding grows with them instead of clipping. */
+  padding: var(--space-2) var(--control-padding-inline);
+  line-height: inherit;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Navy bands re-map the ROLE tokens, so headings, links, body text, outline buttons,
+   form borders and the focus ring inside them all switch together (setting only `color`
+   leaves navy headings on navy). */
+.surface-inverse {
+  --color-text: var(--color-text-inverse);
+  --color-text-muted: var(--color-text-inverse);
+  --color-text-heading: var(--color-text-inverse);
+  --color-link: var(--color-text-inverse);
+  --color-focus: var(--color-focus-on-inverse);
+  --color-action-secondary-text: var(--color-text-inverse);
+  --color-action-secondary-border: var(--color-text-inverse);
+  --color-action-secondary-bg-hover: var(--color-action-secondary-bg-hover-on-inverse);
+  --color-border-input: var(--color-border-input-on-inverse);
+
+  background: var(--color-surface-inverse);
+  color: var(--color-text);
+}
+
+/* A light card placed inside a navy band restores the light-surface role tokens.
+   Must mirror the :root values — tokens.test.ts checks they stay identical. */
+.surface {
+  --color-text: var(--palette-graphite);
+  --color-text-muted: var(--palette-steel);
+  --color-text-heading: var(--palette-navy);
+  --color-link: var(--palette-navy);
+  --color-focus: var(--palette-info);
+  --color-action-secondary-text: var(--palette-navy);
+  --color-action-secondary-border: var(--palette-navy);
+  --color-action-secondary-bg-hover: var(--palette-silver);
+  --color-border-input: var(--palette-steel);
+
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+/* ── Utilities ────────────────────────────────────────────────────── */
 .skip-link {
   position: absolute;
   inset-inline-start: var(--space-4);
-  inset-block-start: calc(-1 * var(--space-12));
+  inset-block-start: 0;
   padding: var(--space-2) var(--space-4);
   background: var(--color-surface);
   border-radius: var(--radius-md);
-  transition: inset-block-start var(--duration-fast) var(--ease-standard);
-  z-index: 100;
+  box-shadow: var(--shadow-md);
+  /* Hidden by its OWN height, so a long (e.g. two-line Tamil) label never peeks into view. */
+  translate: 0 calc(-100% - var(--space-4));
+  transition: translate var(--duration-fast) var(--ease-standard);
+  z-index: var(--z-skip-link);
 }
 
 .skip-link:focus {
-  inset-block-start: var(--space-4);
+  translate: 0 var(--space-4);
 }
 
 .page {
   max-width: var(--content-max);
   margin-inline: auto;
-  padding: var(--space-8) var(--space-4);
+  padding: var(--space-section) var(--gutter);
 }
 
 .visually-hidden {
