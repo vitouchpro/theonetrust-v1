@@ -1,0 +1,101 @@
+@import './tokens.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+  overflow-wrap: break-word;
+}
+
+:lang(ta) {
+  font-family: var(--font-tamil);
+  /* Tamil glyphs need extra vertical room to avoid clipping. */
+  line-height: calc(var(--leading-body) + 0.15);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading);
+  line-height: var(--leading-heading);
+  color: var(--color-primary);
+}
+
+h1 {
+  font-size: var(--text-h1);
+}
+
+img,
+svg,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: var(--color-primary);
+  text-underline-offset: 0.2em;
+}
+
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+}
+
+.skip-link {
+  position: absolute;
+  inset-inline-start: var(--space-4);
+  inset-block-start: calc(-1 * var(--space-12));
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  transition: inset-block-start var(--duration-fast) var(--ease-standard);
+  z-index: 100;
+}
+
+.skip-link:focus {
+  inset-block-start: var(--space-4);
+}
+
+.page {
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding: var(--space-8) var(--space-4);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,41 @@
+name: Bug report
+description: Something on the site, dashboard or API is wrong
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: Do not paste donor personal data, PAN, payment IDs in full, or secrets.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: "1. Open /donate on a 360px phone in Tamil\n2. …"
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options: [Public website, Donation / payment, Receipt, Get Help, Admin dashboard, API, Other]
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Device, browser, viewport and language
+      placeholder: Android Chrome, 360px, Tamil
+  - type: textarea
+    id: test
+    attributes:
+      label: Regression test
+      description: The fix PR must add a test that fails before the fix. Suggest the scenario here.

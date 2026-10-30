@@ -1,0 +1,113 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  CI: true
+
+jobs:
+  quality:
+    name: Quality gate (format, lint, types, unit + coverage, tests-required, build)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Format
+        run: pnpm format:check
+
+      - name: Lint (zero warnings)
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Script and hook tests
+        run: pnpm test:scripts
+
+      - name: Unit tests with coverage thresholds
+        run: pnpm test:coverage
+
+      - name: Tests-required gate
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_REF: origin/${{ github.base_ref }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          export TESTS_NOT_NEEDED_REASON="$(printf '%s' "$PR_BODY" | sed -n 's/^Tests-Not-Needed:[[:space:]]*//p' | head -n1)"
+          pnpm check:tests-required
+
+      - name: Whitespace and conflict markers
+        if: github.event_name == 'pull_request'
+        run: git diff --check origin/${{ github.base_ref }}...HEAD
+
+      - name: Build
+        run: pnpm build
+
+      - name: Secrets must not reach the browser bundle
+        run: |
+          if grep -rEn "RAZORPAY_KEY_SECRET|RAZORPAY_WEBHOOK_SECRET|DATABASE_URL|DIRECT_URL|rzp_live_" apps/web/dist; then
+            echo "::error::Server-only values found in the web bundle"; exit 1
+          fi
+
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: '**/coverage/'
+          retention-days: 14
+
+  e2e:
+    name: E2E — 5 viewports + auto bug detector
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Install Chromium
+        run: pnpm --filter @theonetrust/web exec playwright install --with-deps chromium
+
+      - name: Playwright
+        run: pnpm test:e2e
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            apps/web/playwright-report/
+            apps/web/test-results/
+          retention-days: 14

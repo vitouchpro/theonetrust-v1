@@ -1,0 +1,9 @@
+dist
+coverage
+playwright-report
+test-results
+pnpm-lock.yaml
+docs/reference
+PROJECT_SPEC.md
+docs/database-provider-switch.md
+docs/ux-design-brief.md
