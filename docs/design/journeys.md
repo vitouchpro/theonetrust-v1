@@ -1,8 +1,9 @@
 # User journeys
 
 Six journeys the site must support end to end. Each lists the entry points, steps, what the person
-sees on success and on failure, and the issues that build it. Routes are in `sitemap.md`; every
-English route has a Tamil mirror under `/ta/` (ADR 0004).
+sees on success and on failure, and the issues that build it. Public visitors use **one single page**
+(`/`, Tamil `/ta/`); donating and getting help happen in **panels** on that page (ADR 0005). Routes
+are in `sitemap.md`.
 
 Rules that apply to every journey:
 
@@ -17,8 +18,8 @@ Rules that apply to every journey:
 ## 1. First-time donor
 
 **Goal**: give once, safely, and get an acknowledgement.
-**Entry**: landing hero "Donate", a "Ways we help" card (pre-selects the need), a shared link,
-the sticky header button.
+**Entry**: the hero or sticky header "Donate" button, a "Ways we help" card (pre-selects the need),
+a shared link such as `/ta/?programme=education#donate`. All of these open the **donate panel**.
 
 1. Choose a need, or "General donation" (cards say whether gifts are general or earmarked).
 2. Choose an amount: quick picks or a custom amount from ₹1. Optional "cover the processing fee" tick.
@@ -28,21 +29,21 @@ the sticky header button.
    plus email only if they consent. Tax-benefit opt-in appears only when the trust's approval is
    confirmed.
 4. Pay in Razorpay Checkout: UPI QR or app, card, or netbanking.
-5. `/donate/status/:token` (a private random link, not the donation reference) shows the
-   **verified** result.
+5. The donate panel shows the **verified** result. The result never appears in the URL; a private
+   status token is kept only in that browser tab while the payment is being confirmed.
 
-| Outcome                       | What the donor sees                                                                                                                    |
-| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| Verified paid                 | Thank you, amount, reference; acknowledgement download and share link if the amount meets the threshold; "we've emailed you" if chosen |
-| Pending verification          | "Pending verification — we're confirming your payment. Please don't pay again." + **Check again** button; never a false success        |
-| Failed                        | "Payment didn't go through." + try again; "If money left your account, contact us with this reference"                                 |
-| Cancelled checkout            | Back on the form with the same need and amount filled in                                                                               |
-| UPI limit hit                 | Explains bank or new-UPI-user limits; suggests card, netbanking or bank transfer (journey 3)                                           |
-| Network drop / refresh / back | Status page re-checks safely; one click never creates a second donation                                                                |
+| Outcome                       | What the donor sees                                                                                                                                         |
+| ----------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Verified paid                 | Thank you, amount, reference; acknowledgement download and share link if the amount meets the threshold; "we've emailed you" if chosen                      |
+| Pending verification          | "Pending verification — we're confirming your payment. Please don't pay again." + **Check again** button; never a false success                             |
+| Failed                        | "Payment didn't go through." + try again; "If money left your account, contact us with this reference"                                                      |
+| Cancelled checkout            | Back on the form with the same need and amount filled in                                                                                                    |
+| UPI limit hit                 | Explains bank or new-UPI-user limits; suggests card, netbanking or bank transfer (journey 3)                                                                |
+| Network drop / refresh / back | The panel reopens and re-checks safely; one click never creates a second donation; if the tab was closed, the acknowledgement arrives by email (when given) |
 
 ```mermaid
 flowchart LR
-  A[Landing or shared link] --> B[Choose need]
+  A[Single page or shared link] --> B[Donate panel: choose need]
   B --> C[Choose amount]
   C --> D[Name and contact]
   D --> E[Razorpay checkout]
@@ -61,7 +62,7 @@ Issues: #12, #23, #24, #26, #27, #29, #30.
 ## 2. Monthly donor (autopay)
 
 **Goal**: give every month and stay in control.
-**Entry**: "Give monthly" choice on the amount step, a link in a thank-you email.
+**Entry**: "Give monthly" choice on the amount step of the donate panel, a link in a thank-you email.
 
 1. Choose need and monthly amount.
 2. Consent screen: amount, monthly, start date, how to cancel, and (for UPI AutoPay) that the
@@ -70,7 +71,7 @@ Issues: #12, #23, #24, #26, #27, #29, #30.
    - **Up to ₹15,000/month** → UPI AutoPay (QR or UPI app).
    - **Above ₹15,000/month** → eMandate (netbanking, debit card or Aadhaar) or card. The page
      says that PhonePe and BHIM don't support UPI mandates above ₹15,000.
-4. Confirmation page and email with a private **manage link** (`/manage/:token`).
+4. Confirmation in the donate panel and by email, with a private **manage link** (`/manage/:token`).
 5. Each month: the charge is recorded as its own payment; a receipt is offered per charge
    when it meets the receipt threshold (owner setting, default ₹500), plus an optional yearly summary.
 
@@ -89,7 +90,7 @@ Issues: #32, #33, #29, #30.
 ## 3. Large gift (bank transfer)
 
 **Goal**: give above UPI limits without errors or doubts.
-**Entry**: amount above the UPI guidance on `/donate`, the "UPI limit" message, an FAQ link.
+**Entry**: an amount above the UPI guidance in the donate panel, the "UPI limit" message, an FAQ link.
 
 1. Choose need and amount; choose **Bank transfer (NEFT/RTGS)**, or card / netbanking for any amount.
 2. If Razorpay Smart Collect is enabled for the trust: a unique account number for this donation
@@ -112,7 +113,8 @@ Issues: #24, #25, #31, #29.
 ## 4. Help seeker (for self or someone else)
 
 **Goal**: ask for help easily, even with low digital confidence.
-**Entry**: header and hero "Get Help", the contact section, a shared link to `/ta/help`.
+**Entry**: header and hero "Get Help", the contact section, a shared link to `/ta/#get-help`. All
+of these open the **Get Help panel** on the single page.
 
 1. Who needs help? **Myself** / **Someone I know** / **I'm helping on behalf of someone**.
 2. What kind of help? Large icon cards (education, food & essentials, health, emergency,
@@ -126,7 +128,7 @@ Issues: #24, #25, #31, #29.
 6. Result: a reference ID and "we will call you".
 
 **Shortcuts for people who can't fill in a form**: one-field **Call me back** (phone only),
-**Chat on WhatsApp** (+91 96005 16999), and the phone number with call hours (Mon–Sat 8 AM – 10 PM).
+**Chat on WhatsApp** (+91 96005 16999), and the phone number with call hours (every day, 8 AM – 10 PM).
 
 | Outcome                 | What happens                                                               |
 | ----------------------- | -------------------------------------------------------------------------- |
@@ -156,7 +158,7 @@ Issues: #15, #22, #30.
 **Goal**: share the trust with a family or community WhatsApp group, in Tamil.
 **Entry**: any page's share action or copied URL.
 
-1. Copy `theonetrust.in/ta/` (or `/ta/donate?programme=…`) and paste it into WhatsApp.
+1. Copy `theonetrust.in/ta/` (or `/ta/?programme=…#donate`) and paste it into WhatsApp.
 2. The link preview shows the Tamil title, description and image (verified content only).
 3. Relatives open it in Tamil, regardless of their own settings, and can switch to English.
 4. After donating, a donor can share their **receipt link**; it shows only the minimum
@@ -176,7 +178,8 @@ Issues: #11, #16, #29.
 
 **Goal**: know what money really arrived, follow up help requests, and keep records, without
 database access.
-**Entry**: `/admin/login` (password + authenticator app).
+**Entry**: `/admin/login` (password + authenticator app). The dashboard is in Tamil or English with a
+toggle; the choice is saved to the owner's account.
 
 Daily: **Overview** (verified today / this month, pending, failed, refunds) → **Exceptions**
 (pending too long, mismatches, bank transfers to confirm) → **Help requests** (call New requests,
