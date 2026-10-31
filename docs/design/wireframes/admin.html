@@ -1,0 +1,974 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wireframe — Owner dashboard shell and overview (issue #9)</title>
+    <!--
+      LOW-FIDELITY WIREFRAME. /admin (owner only, signed in with a second factor — #23).
+      Functional and dense, deliberately plainer than the public page. Each frame is one state
+      of the Overview screen inside the same shell. Add ?lang=ta for Tamil (the owner's toggle).
+      [Square brackets] = placeholder; no real or invented figures.
+    -->
+    <link rel="stylesheet" href="wf-states.css" />
+    <style>
+      .screens {
+        display: grid;
+        gap: 28px;
+        padding: 16px;
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      .screens > * {
+        min-width: 0;
+      }
+      /* Shell */
+      .shell {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .adm-top .wrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--line);
+        min-height: 64px;
+      }
+      .adm-top .wrap > .place {
+        margin-right: auto;
+        font-weight: 700;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .adm-top .seg {
+        flex: none;
+      }
+      .adm-top .seg span {
+        padding: 0 12px;
+        min-width: 48px;
+      }
+      .place .long,
+      .signout {
+        display: none;
+      }
+      @media (min-width: 48em) {
+        .place .long {
+          display: inline;
+        }
+        .place .short {
+          display: none;
+        }
+        .signout {
+          display: inline-flex;
+        }
+      }
+      .side {
+        display: none;
+        border-right: 1px solid var(--line);
+        padding: 12px 8px;
+        background: var(--fill-2);
+      }
+      .side a {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 44px;
+        padding: 8px 10px;
+        border-radius: 6px;
+        text-decoration: none;
+        overflow-wrap: anywhere;
+      }
+      .side a.on {
+        background: var(--paper);
+        border: 2px solid var(--ink);
+        font-weight: 700;
+      }
+      .side a .n {
+        margin-left: auto;
+        font: 600 12px/1 monospace;
+        border: 1px solid var(--ink);
+        border-radius: 10px;
+        padding: 3px 6px;
+        white-space: nowrap;
+        flex: none;
+      }
+      .side .group {
+        font: 600 11px/1 monospace;
+        text-transform: uppercase;
+        color: var(--mid);
+        padding: 12px 10px 4px;
+      }
+      .main {
+        padding: 16px;
+        display: grid;
+        gap: 16px;
+        min-width: 0;
+      }
+      .main > * {
+        min-width: 0;
+      }
+      .menu-btn {
+        display: inline-flex;
+      }
+      @media (min-width: 64em) {
+        .shell {
+          grid-template-columns: 240px minmax(0, 1fr);
+        }
+        .side {
+          display: block;
+        }
+        .menu-btn {
+          display: none;
+        }
+        .main {
+          padding: 24px;
+        }
+      }
+      /* Overview */
+      .page-title {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 4px 12px;
+      }
+      .page-title h2 {
+        margin: 0;
+      }
+      .kpis {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .kpi {
+        border: 1px solid var(--ink);
+        border-radius: 8px;
+        padding: 12px 14px;
+        background: var(--paper);
+        display: grid;
+        gap: 2px;
+      }
+      .kpi .label {
+        font-size: 13px;
+        color: var(--mid);
+      }
+      .kpi .value {
+        font:
+          700 26px/1.2 Georgia,
+          serif;
+        overflow-wrap: anywhere;
+      }
+      .kpi .sub {
+        font-size: 13px;
+      }
+      .counts {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .count {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 10px 12px;
+        background: var(--paper);
+        display: grid;
+        gap: 2px;
+      }
+      .count .label {
+        font-size: 13px;
+        display: flex;
+        gap: 6px;
+        align-items: center;
+      }
+      .count .value {
+        font-weight: 700;
+        font-size: 20px;
+      }
+      .ic {
+        display: inline-grid;
+        place-items: center;
+        width: 20px;
+        height: 20px;
+        border: 1.5px solid var(--ink);
+        border-radius: 50%;
+        font: 700 11px/1 system-ui;
+        flex: none;
+      }
+      .ic.sq {
+        border-radius: 3px;
+      }
+      .money {
+        border: 1px dashed var(--ink);
+        border-radius: 8px;
+        padding: 12px 14px;
+        display: grid;
+        gap: 6px;
+        background: var(--paper);
+      }
+      .money .line {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .money .line.total {
+        border-top: 1px solid var(--ink);
+        padding-top: 6px;
+        font-weight: 700;
+      }
+      .panels {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .panel {
+        border: 1px solid var(--ink);
+        border-radius: 8px;
+        background: var(--paper);
+        min-width: 0;
+      }
+      .panel > h3 {
+        padding: 10px 14px;
+        margin: 0;
+        border-bottom: 1px solid var(--line);
+        font-size: 16px;
+      }
+      .attn {
+        display: grid;
+      }
+      .attn > div {
+        display: grid;
+        grid-template-columns: 24px minmax(0, 1fr) auto;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--line);
+        min-height: 52px;
+      }
+      .attn > div:last-child {
+        border-bottom: 0;
+      }
+      .attn .go {
+        text-decoration: underline;
+        font-weight: 600;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+      }
+      /* Recent activity: stacked rows on phones, table on wide screens */
+      .act {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+      .act th {
+        text-align: left;
+        font-size: 12px;
+        color: var(--mid);
+        font-weight: 600;
+        padding: 8px 14px;
+        border-bottom: 1px solid var(--line);
+      }
+      .act td {
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--line);
+        vertical-align: top;
+      }
+      .act td.amt {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border: 1px solid var(--ink);
+        border-radius: 12px;
+        padding: 2px 8px;
+        font-size: 13px;
+        white-space: nowrap;
+      }
+      @media (max-width: 47.99em) {
+        .act thead {
+          display: none;
+        }
+        .act tr {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto;
+          grid-template-areas: 'when when' 'what amt' 'st st';
+          gap: 4px 12px;
+          padding: 10px 14px;
+          border-bottom: 1px solid var(--line);
+        }
+        .act td {
+          padding: 0;
+          border: 0;
+        }
+        .act td.when {
+          grid-area: when;
+          font-size: 12px;
+          color: var(--mid);
+        }
+        .act td.what {
+          grid-area: what;
+        }
+        .act td.st {
+          grid-area: st;
+        }
+        .act td.amt {
+          grid-area: amt;
+        }
+      }
+      @media (min-width: 48em) {
+        .kpis {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+        .counts {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+      }
+      @media (min-width: 80em) {
+        .panels {
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+        }
+      }
+      /* States */
+      .banner {
+        border: 2px solid var(--ink);
+        border-radius: 8px;
+        padding: 10px 14px;
+        display: grid;
+        grid-template-columns: 24px minmax(0, 1fr);
+        gap: 10px;
+        background: var(--paper);
+      }
+      .banner .row {
+        grid-column: 2;
+      }
+      .sk {
+        background: var(--fill);
+        border-radius: 4px;
+        height: 14px;
+      }
+      .sk.big {
+        height: 28px;
+        width: 60%;
+      }
+      .empty {
+        border: 1px dashed var(--line);
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        display: grid;
+        gap: 8px;
+        justify-items: center;
+      }
+      .drawer {
+        border: 1px solid var(--ink);
+        border-radius: 8px;
+        background: var(--fill-2);
+        padding: 8px;
+        display: grid;
+      }
+      .drawer a {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 48px;
+        padding: 8px 10px;
+        border-radius: 6px;
+        text-decoration: none;
+        overflow-wrap: anywhere;
+      }
+      .drawer a.on {
+        background: var(--paper);
+        border: 2px solid var(--ink);
+        font-weight: 700;
+      }
+      .drawer a .n {
+        margin-left: auto;
+        font: 600 12px/1 monospace;
+        border: 1px solid var(--ink);
+        border-radius: 10px;
+        padding: 3px 6px;
+        white-space: nowrap;
+        flex: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-head">
+      <h1>Owner dashboard — shell and overview (#9)</h1>
+      <p class="muted small">
+        Each frame is the same Overview screen in a different state. Side menu on wide screens; menu
+        button on phones and tablets. Detailed screens (donations, exceptions, help inbox…) come in
+        their own issues.
+      </p>
+    </div>
+
+    <div class="screens">
+      <!-- ============ A. NORMAL ============ -->
+      <div>
+        <span class="state-name">A · Overview — normal day</span>
+        <div class="frame">
+          <header class="adm-top">
+            <div class="wrap">
+              <span class="btn menu-btn" data-i18n="menu">☰ Menu</span>
+              <span class="place"
+                ><span class="long" data-i18n="adminTitle">[Trust name] · Admin</span
+                ><span class="short" data-i18n="adminShort">Admin</span></span
+              >
+              <span class="seg" aria-label="Language"
+                ><span>தமிழ்</span><span class="on">EN</span></span
+              >
+              <span class="btn signout" data-i18n="signOut">Sign out</span>
+            </div>
+          </header>
+          <div class="shell">
+            <nav class="side" aria-label="Admin">
+              <a class="on" href="#" aria-current="page"
+                ><span class="ic sq">▦</span><span data-i18n="navOverview">Overview</span></a
+              >
+              <div class="group" data-i18n="grpMoney">Money</div>
+              <a href="#"
+                ><span class="ic sq">₹</span><span data-i18n="navDonations">Donations</span></a
+              >
+              <a href="#"
+                ><span class="ic">!</span><span data-i18n="navExceptions">Payment problems</span
+                ><span class="n">[n]</span></a
+              >
+              <a href="#"
+                ><span class="ic sq">✓</span
+                ><span data-i18n="navReceipts">Acknowledgements</span></a
+              >
+              <a href="#"
+                ><span class="ic">↻</span><span data-i18n="navMonthly">Monthly giving</span></a
+              >
+              <div class="group" data-i18n="grpPeople">People</div>
+              <a href="#"
+                ><span class="ic">?</span><span data-i18n="navHelp">Help requests</span
+                ><span class="n">[n]</span></a
+              >
+              <div class="group" data-i18n="grpSite">Website</div>
+              <a href="#"
+                ><span class="ic sq">✎</span
+                ><span data-i18n="navContent">Programmes &amp; content</span></a
+              >
+              <a href="#"
+                ><span class="ic sq">▤</span
+                ><span data-i18n="navDocs">Transparency documents</span></a
+              >
+              <a href="#"
+                ><span class="ic sq">§</span><span data-i18n="navTax">Tax &amp; compliance</span></a
+              >
+              <div class="group" data-i18n="grpSystem">System</div>
+              <a href="#"
+                ><span class="ic sq">⚙</span><span data-i18n="navSettings">Settings</span></a
+              >
+              <a href="#"
+                ><span class="ic sq">≡</span><span data-i18n="navAudit">Activity log</span></a
+              >
+            </nav>
+            <main class="main">
+              <div class="page-title">
+                <h2 data-i18n="overview">Overview</h2>
+                <span class="small muted"
+                  ><span data-i18n="updated">Updated</span> [10:42 AM] ·
+                  <u data-i18n="refresh">Refresh</u></span
+                >
+              </div>
+
+              <section class="kpis" aria-label="Verified donations">
+                <div class="kpi">
+                  <span class="label" data-i18n="today">Received today (verified)</span
+                  ><span class="value">[₹X]</span
+                  ><span class="sub"
+                    ><span>[n]</span> <span data-i18n="payments">payments</span></span
+                  >
+                </div>
+                <div class="kpi">
+                  <span class="label" data-i18n="month">This month (verified)</span
+                  ><span class="value">[₹X]</span
+                  ><span class="sub"
+                    ><span>[n]</span> <span data-i18n="payments">payments</span></span
+                  >
+                </div>
+                <div class="kpi">
+                  <span class="label" data-i18n="lifetime">Since launch (verified)</span
+                  ><span class="value">[₹X]</span
+                  ><span class="sub"
+                    ><span>[n]</span> <span data-i18n="payments">payments</span></span
+                  >
+                </div>
+              </section>
+
+              <section class="counts" aria-label="This month by status">
+                <div class="count">
+                  <span class="label"
+                    ><span class="ic">✓</span><span data-i18n="cPaid">Paid</span></span
+                  ><span class="value">[n]</span>
+                </div>
+                <div class="count">
+                  <span class="label"
+                    ><span class="ic">…</span
+                    ><span data-i18n="cPending">Pending verification</span></span
+                  ><span class="value">[n]</span>
+                </div>
+                <div class="count">
+                  <span class="label"
+                    ><span class="ic">✕</span><span data-i18n="cFailed">Failed</span></span
+                  ><span class="value">[n]</span>
+                </div>
+                <div class="count">
+                  <span class="label"
+                    ><span class="ic">↩</span><span data-i18n="cRefunded">Refunded</span></span
+                  ><span class="value">[n]</span>
+                </div>
+              </section>
+
+              <section class="money" aria-label="This month money">
+                <strong data-i18n="moneyTitle">This month — how the total is worked out</strong>
+                <div class="line">
+                  <span data-i18n="gross">Received (verified)</span><span>[₹X]</span>
+                </div>
+                <div class="line"><span data-i18n="refunds">Refunded</span><span>− [₹X]</span></div>
+                <div class="line total">
+                  <span data-i18n="net">Net donations</span><span>[₹X]</span>
+                </div>
+                <p class="small muted" data-i18n="notBank">
+                  This is not your bank balance. Razorpay sends money to the bank separately, after
+                  its fees; check settlements in Razorpay.
+                </p>
+              </section>
+
+              <div class="panels">
+                <section class="panel">
+                  <h3 data-i18n="needsAttention">Needs attention</h3>
+                  <div class="attn">
+                    <div>
+                      <span class="ic">…</span
+                      ><span
+                        ><b>[n]</b>
+                        <span data-i18n="aPending"
+                          >payments pending for more than [30 minutes]</span
+                        ></span
+                      ><span class="go" data-i18n="view">View</span>
+                    </div>
+                    <div>
+                      <span class="ic">!</span
+                      ><span
+                        ><b>[n]</b>
+                        <span data-i18n="aNoAck"
+                          >paid, but the acknowledgement was not sent</span
+                        ></span
+                      ><span class="go" data-i18n="view">View</span>
+                    </div>
+                    <div>
+                      <span class="ic">?</span
+                      ><span
+                        ><b>[n]</b>
+                        <span data-i18n="aHelp">new help requests not yet called</span></span
+                      ><span class="go" data-i18n="view">View</span>
+                    </div>
+                    <div>
+                      <span class="ic">↻</span
+                      ><span
+                        ><b>[n]</b>
+                        <span data-i18n="aMonthly">monthly gifts with failed payments</span></span
+                      ><span class="go" data-i18n="view">View</span>
+                    </div>
+                  </div>
+                </section>
+
+                <section class="panel">
+                  <h3 data-i18n="recent">Recent activity</h3>
+                  <table class="act">
+                    <thead>
+                      <tr>
+                        <th data-i18n="thWhen">When</th>
+                        <th data-i18n="thWhat">What</th>
+                        <th data-i18n="thStatus">Status</th>
+                        <th class="amt" data-i18n="thAmount">Amount</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="when">[10:31 AM]</td>
+                        <td class="what">
+                          <span data-i18n="rDonation">Donation</span> · [R••••] · [98•••••10]
+                        </td>
+                        <td class="st">
+                          <span class="badge"
+                            ><span>✓</span><span data-i18n="cPaid">Paid</span></span
+                          >
+                        </td>
+                        <td class="amt">[₹X]</td>
+                      </tr>
+                      <tr>
+                        <td class="when">[10:12 AM]</td>
+                        <td class="what">
+                          <span data-i18n="rDonation">Donation</span> ·
+                          <span data-i18n="anon">Name hidden</span>
+                        </td>
+                        <td class="st">
+                          <span class="badge"
+                            ><span>…</span
+                            ><span data-i18n="cPending">Pending verification</span></span
+                          >
+                        </td>
+                        <td class="amt">[₹X]</td>
+                      </tr>
+                      <tr>
+                        <td class="when">[9:58 AM]</td>
+                        <td class="what">
+                          <span data-i18n="rMonthly">Monthly gift</span> · [S••••]
+                        </td>
+                        <td class="st">
+                          <span class="badge"
+                            ><span>✕</span><span data-i18n="cFailed">Failed</span></span
+                          >
+                        </td>
+                        <td class="amt">[₹X]</td>
+                      </tr>
+                      <tr>
+                        <td class="when">[9:40 AM]</td>
+                        <td class="what"><span data-i18n="rRefund">Refund</span> · [ACK-XXXX]</td>
+                        <td class="st">
+                          <span class="badge"
+                            ><span>↩</span><span data-i18n="cRefunded">Refunded</span></span
+                          >
+                        </td>
+                        <td class="amt">− [₹X]</td>
+                      </tr>
+                      <tr>
+                        <td class="when">[9:15 AM]</td>
+                        <td class="what">
+                          <span data-i18n="rHelp">Help request</span> · [HLP-XXXX]
+                        </td>
+                        <td class="st">
+                          <span class="badge"><span>●</span><span data-i18n="new">New</span></span>
+                        </td>
+                        <td class="amt">—</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div style="padding: 8px 14px">
+                    <span class="textlink" data-i18n="allDonations">All donations →</span>
+                  </div>
+                </section>
+              </div>
+              <p class="note">
+                Only server-verified captured payments count as "received" (never the browser
+                redirect, a QR scan, a UTR or a screenshot). Received and refunded are always shown
+                separately; net = received − refunded. Donor names/phones are masked here; full
+                details only on the donation page, and every view of them is logged. Amounts are ₹
+                with Indian grouping (₹1,00,000). Times are IST.
+              </p>
+            </main>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ B. FIRST DAY ============ -->
+      <div>
+        <span class="state-name">B · Overview — no donations yet (first day)</span>
+        <div class="frame">
+          <header class="adm-top">
+            <div class="wrap">
+              <span class="btn menu-btn" data-i18n="menu">☰ Menu</span
+              ><span class="place"
+                ><span class="long" data-i18n="adminTitle">[Trust name] · Admin</span
+                ><span class="short" data-i18n="adminShort">Admin</span></span
+              ><span class="btn signout" data-i18n="signOut">Sign out</span>
+            </div>
+          </header>
+          <main class="main">
+            <h2 data-i18n="overview">Overview</h2>
+            <div class="empty">
+              <span class="ic">₹</span>
+              <h3 data-i18n="emptyTitle">No donations yet</h3>
+              <p class="small muted" data-i18n="emptyText">
+                Verified donations will appear here as soon as they are received. Totals show ₹0,
+                never a blank.
+              </p>
+              <span class="btn" data-i18n="checkSetup">Check payment setup</span>
+            </div>
+            <p class="note">
+              Totals and counts still render as ₹0 / 0 so the owner can tell "nothing yet" from "not
+              loaded".
+            </p>
+          </main>
+        </div>
+      </div>
+
+      <!-- ============ C. LOADING ============ -->
+      <div>
+        <span class="state-name">C · Overview — loading</span>
+        <div class="frame">
+          <header class="adm-top">
+            <div class="wrap">
+              <span class="btn menu-btn" data-i18n="menu">☰ Menu</span
+              ><span class="place"
+                ><span class="long" data-i18n="adminTitle">[Trust name] · Admin</span
+                ><span class="short" data-i18n="adminShort">Admin</span></span
+              ><span class="btn signout" data-i18n="signOut">Sign out</span>
+            </div>
+          </header>
+          <main class="main" aria-busy="true">
+            <h2 data-i18n="overview">Overview</h2>
+            <div class="kpis">
+              <div class="kpi">
+                <div class="sk"></div>
+                <div class="sk big"></div>
+              </div>
+              <div class="kpi">
+                <div class="sk"></div>
+                <div class="sk big"></div>
+              </div>
+              <div class="kpi">
+                <div class="sk"></div>
+                <div class="sk big"></div>
+              </div>
+            </div>
+            <p class="small muted" role="status" data-i18n="loading">Loading the latest figures…</p>
+            <p class="note">
+              Placeholders keep the layout steady; never show ₹0 while loading (it would look like
+              real data).
+            </p>
+          </main>
+        </div>
+      </div>
+
+      <!-- ============ D. FAILED TO LOAD ============ -->
+      <div>
+        <span class="state-name">D · Overview — could not load</span>
+        <div class="frame">
+          <header class="adm-top">
+            <div class="wrap">
+              <span class="btn menu-btn" data-i18n="menu">☰ Menu</span
+              ><span class="place"
+                ><span class="long" data-i18n="adminTitle">[Trust name] · Admin</span
+                ><span class="short" data-i18n="adminShort">Admin</span></span
+              ><span class="btn signout" data-i18n="signOut">Sign out</span>
+            </div>
+          </header>
+          <main class="main">
+            <h2 data-i18n="overview">Overview</h2>
+            <div class="banner" role="alert">
+              <span class="ic">!</span>
+              <div>
+                <b data-i18n="errTitle">Couldn't load the figures</b>
+                <p class="small" data-i18n="errText">
+                  No figures are shown, so nothing here can be mistaken for real totals. Donations
+                  are still being received.
+                </p>
+              </div>
+              <div class="row">
+                <span class="btn primary" data-i18n="retry">Try again</span
+                ><span class="small muted"
+                  ><span data-i18n="errRef">Error reference</span> [req-XXXX]</span
+                >
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+
+      <!-- ============ E. DATA DELAYED ============ -->
+      <div>
+        <span class="state-name">E · Overview — payment updates delayed</span>
+        <div class="frame">
+          <header class="adm-top">
+            <div class="wrap">
+              <span class="btn menu-btn" data-i18n="menu">☰ Menu</span
+              ><span class="place"
+                ><span class="long" data-i18n="adminTitle">[Trust name] · Admin</span
+                ><span class="short" data-i18n="adminShort">Admin</span></span
+              ><span class="btn signout" data-i18n="signOut">Sign out</span>
+            </div>
+          </header>
+          <main class="main">
+            <h2 data-i18n="overview">Overview</h2>
+            <div class="banner" role="status">
+              <span class="ic">⏱</span>
+              <div>
+                <b data-i18n="lagTitle">Payment updates may be behind</b>
+                <p class="small" data-i18n="lagText">
+                  We haven't heard from Razorpay for [45 minutes]. Totals may be missing recent
+                  payments; the reconciliation check runs every [15 minutes].
+                </p>
+              </div>
+              <div class="row">
+                <span class="btn" data-i18n="viewProblems">View payment problems</span>
+              </div>
+            </div>
+            <div class="kpis">
+              <div class="kpi">
+                <span class="label" data-i18n="today">Received today (verified)</span
+                ><span class="value">[₹X]</span
+                ><span class="sub"><span data-i18n="asOf">as of</span> [9:57 AM]</span>
+              </div>
+            </div>
+            <p class="note">
+              Shown when the last webhook or reconciliation run is older than a setting. Figures
+              stay visible but carry their "as of" time.
+            </p>
+          </main>
+        </div>
+      </div>
+
+      <!-- ============ F. MOBILE MENU OPEN ============ -->
+      <div>
+        <span class="state-name">F · Menu open (phones and tablets)</span>
+        <div class="frame">
+          <header class="adm-top">
+            <div class="wrap">
+              <span class="btn" data-i18n="close">✕ Close</span
+              ><span class="place"
+                ><span class="long" data-i18n="adminTitle">[Trust name] · Admin</span
+                ><span class="short" data-i18n="adminShort">Admin</span></span
+              ><span class="seg" aria-label="Language"
+                ><span>தமிழ்</span><span class="on">EN</span></span
+              >
+            </div>
+          </header>
+          <main class="main">
+            <nav class="drawer" aria-label="Admin">
+              <a class="on" href="#" aria-current="page"
+                ><span class="ic sq">▦</span><span data-i18n="navOverview">Overview</span></a
+              >
+              <a href="#"
+                ><span class="ic sq">₹</span><span data-i18n="navDonations">Donations</span></a
+              >
+              <a href="#"
+                ><span class="ic">!</span><span data-i18n="navExceptions">Payment problems</span
+                ><span class="n">[n]</span></a
+              >
+              <a href="#"
+                ><span class="ic sq">✓</span
+                ><span data-i18n="navReceipts">Acknowledgements</span></a
+              >
+              <a href="#"
+                ><span class="ic">↻</span><span data-i18n="navMonthly">Monthly giving</span></a
+              >
+              <a href="#"
+                ><span class="ic">?</span><span data-i18n="navHelp">Help requests</span
+                ><span class="n">[n]</span></a
+              >
+              <a href="#"
+                ><span class="ic sq">✎</span
+                ><span data-i18n="navContent">Programmes &amp; content</span></a
+              >
+              <a href="#"
+                ><span class="ic sq">▤</span
+                ><span data-i18n="navDocs">Transparency documents</span></a
+              >
+              <a href="#"
+                ><span class="ic sq">§</span><span data-i18n="navTax">Tax &amp; compliance</span></a
+              >
+              <a href="#"
+                ><span class="ic sq">⚙</span><span data-i18n="navSettings">Settings</span></a
+              >
+              <a href="#"
+                ><span class="ic sq">≡</span><span data-i18n="navAudit">Activity log</span></a
+              >
+              <a href="#"><span class="ic sq">⎋</span><span data-i18n="signOut">Sign out</span></a>
+            </nav>
+            <p class="note">
+              Full-height sheet; focus moves into it and back to the menu button on close; Esc
+              closes. Counts are text, not just dots.
+            </p>
+          </main>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const ta = {
+        adminShort: 'நிர்வாகம்',
+        menu: '☰ பட்டியல்',
+        adminTitle: '[அறக்கட்டளை பெயர்] · நிர்வாகம்',
+        signOut: 'வெளியேறு',
+        close: '✕ மூடு',
+        navOverview: 'கண்ணோட்டம்',
+        grpMoney: 'பணம்',
+        navDonations: 'நன்கொடைகள்',
+        navExceptions: 'பணம் செலுத்தும் சிக்கல்கள்',
+        navReceipts: 'ஒப்புகைகள்',
+        navMonthly: 'மாதாந்திர நன்கொடை',
+        grpPeople: 'மக்கள்',
+        navHelp: 'உதவி கோரிக்கைகள்',
+        grpSite: 'இணையதளம்',
+        navContent: 'திட்டங்கள் & உள்ளடக்கம்',
+        navDocs: 'வெளிப்படைத்தன்மை ஆவணங்கள்',
+        navTax: 'வரி & இணக்கம்',
+        grpSystem: 'அமைப்பு',
+        navSettings: 'அமைப்புகள்',
+        navAudit: 'செயல்பாட்டுப் பதிவு',
+        overview: 'கண்ணோட்டம்',
+        updated: 'புதுப்பிக்கப்பட்டது',
+        refresh: 'புதுப்பி',
+        today: 'இன்று பெறப்பட்டது (சரிபார்க்கப்பட்டது)',
+        month: 'இந்த மாதம் (சரிபார்க்கப்பட்டது)',
+        lifetime: 'தொடக்கம் முதல் (சரிபார்க்கப்பட்டது)',
+        payments: 'பரிவர்த்தனைகள்',
+        cPaid: 'செலுத்தப்பட்டது',
+        cPending: 'சரிபார்ப்பில் உள்ளது',
+        cFailed: 'தோல்வி',
+        cRefunded: 'திருப்பி அளிக்கப்பட்டது',
+        moneyTitle: 'இந்த மாதம் — மொத்தம் கணக்கிடப்படும் விதம்',
+        gross: 'பெறப்பட்டது (சரிபார்க்கப்பட்டது)',
+        refunds: 'திருப்பி அளிக்கப்பட்டது',
+        net: 'நிகர நன்கொடைகள்',
+        notBank:
+          'இது உங்கள் வங்கி இருப்பு அல்ல. Razorpay கட்டணங்களைக் கழித்து, பணத்தைத் தனியாக வங்கிக்கு அனுப்பும்; தீர்வுகளை Razorpay-ல் பாருங்கள்.',
+        needsAttention: 'கவனம் தேவை',
+        aPending: '[30 நிமிடங்களுக்கு] மேல் சரிபார்ப்பில் உள்ள பரிவர்த்தனைகள்',
+        aNoAck: 'செலுத்தப்பட்டது, ஆனால் ஒப்புகை அனுப்பப்படவில்லை',
+        aHelp: 'இன்னும் அழைக்கப்படாத புதிய உதவி கோரிக்கைகள்',
+        aMonthly: 'பணம் செலுத்தத் தவறிய மாதாந்திர நன்கொடைகள்',
+        view: 'பார்',
+        recent: 'சமீபத்திய செயல்பாடு',
+        thWhen: 'நேரம்',
+        thWhat: 'விவரம்',
+        thStatus: 'நிலை',
+        thAmount: 'தொகை',
+        rDonation: 'நன்கொடை',
+        anon: 'பெயர் மறைக்கப்பட்டது',
+        rMonthly: 'மாதாந்திர நன்கொடை',
+        rRefund: 'திருப்பி அளிப்பு',
+        rHelp: 'உதவி கோரிக்கை',
+        new: 'புதியது',
+        allDonations: 'அனைத்து நன்கொடைகளும் →',
+        emptyTitle: 'இன்னும் நன்கொடைகள் இல்லை',
+        emptyText:
+          'சரிபார்க்கப்பட்ட நன்கொடைகள் பெறப்பட்டவுடன் இங்கே தோன்றும். மொத்தம் ₹0 எனக் காட்டப்படும், ஒருபோதும் காலியாக இருக்காது.',
+        checkSetup: 'பணம் செலுத்தும் அமைப்பைச் சரிபார்',
+        loading: 'சமீபத்திய எண்ணிக்கைகள் ஏற்றப்படுகின்றன…',
+        errTitle: 'எண்ணிக்கைகளை ஏற்ற முடியவில்லை',
+        errText:
+          'எந்த எண்ணிக்கையும் காட்டப்படவில்லை, எனவே இங்கே எதுவும் உண்மையான மொத்தமாகத் தவறாகப் புரிந்துகொள்ளப்படாது. நன்கொடைகள் தொடர்ந்து பெறப்படுகின்றன.',
+        retry: 'மீண்டும் முயற்சி செய்',
+        errRef: 'பிழை குறிப்பு',
+        lagTitle: 'பணம் செலுத்தும் புதுப்பிப்புகள் தாமதமாகலாம்',
+        lagText:
+          '[45 நிமிடங்களாக] Razorpay-யிடமிருந்து தகவல் வரவில்லை. சமீபத்திய பரிவர்த்தனைகள் மொத்தத்தில் இல்லாமல் இருக்கலாம்; சரிபார்ப்பு ஒவ்வொரு [15 நிமிடங்களுக்கும்] இயங்கும்.',
+        viewProblems: 'பணம் செலுத்தும் சிக்கல்களைப் பார்',
+        asOf: 'நிலவரம்',
+      };
+      if (new URLSearchParams(location.search).get('lang') === 'ta') {
+        document.documentElement.lang = 'ta';
+        for (const el of document.querySelectorAll('[data-i18n]')) {
+          const text = ta[el.dataset.i18n];
+          if (text) el.textContent = text;
+        }
+        for (const seg of document.querySelectorAll('.seg')) {
+          seg.children[0].classList.add('on');
+          seg.children[1].classList.remove('on');
+        }
+      }
+    </script>
+  </body>
+</html>

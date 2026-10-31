@@ -99,10 +99,26 @@ try {
                   `control "${label}" text is cut off (${el.scrollWidth} > ${el.clientWidth})`,
                 );
               }
-              const clip = el.closest('.frame');
-              if (clip && box.right > clip.getBoundingClientRect().right + 1) {
-                issues.push(`control "${label}" sticks out of its panel`);
+              // Any ancestor that clips (overflow not visible) must fully contain the control —
+              // a squeezed toggle clipped by its own container is as broken as one cut by the panel.
+              for (let up = el.parentElement; up && up !== doc.body; up = up.parentElement) {
+                if (globalThis.getComputedStyle(up).overflowX === 'visible') continue;
+                const r = up.getBoundingClientRect();
+                if (box.left < r.left - 1 || box.right > r.right + 1) {
+                  issues.push(`control "${label}" is clipped by its container`);
+                  break;
+                }
               }
+            }
+            // Tamil parity: every translatable element must have a Tamil entry
+            // (`ta` is the page's top-level dictionary).
+            if (rootEl.lang === 'ta') {
+              const dict = typeof ta === 'object' ? ta : {}; // eslint-disable-line no-undef
+              const missing = new Set();
+              for (const el of doc.querySelectorAll('[data-i18n]')) {
+                if (!dict[el.dataset.i18n]) missing.add(el.dataset.i18n);
+              }
+              if (missing.size) issues.push(`no Tamil text for: ${[...missing].join(', ')}`);
             }
             return issues;
           },
@@ -129,5 +145,5 @@ if (problems.length) {
   process.exit(1);
 }
 console.log(
-  `\n✔ No overflow, header wrapping or broken controls in ${languages.length} languages × ${widths.length} widths`,
+  `\n✔ No overflow, header wrapping, broken or clipped controls or missing Tamil text in ${languages.length} languages × ${widths.length} widths`,
 );
