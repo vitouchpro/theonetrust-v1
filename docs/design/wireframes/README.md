@@ -10,7 +10,7 @@ the real components are built.
 | Donate panel and payment states     | #7    | mobile: [EN](screenshots/donate-390.png) · [TA](screenshots/donate-390-ta.png) — desktop: [EN](screenshots/donate-1440.png) · [TA](screenshots/donate-1440-ta.png)              |
 | Monthly giving manage link          | #7    | mobile: [EN](screenshots/manage-390.png) · [TA](screenshots/manage-390-ta.png) — desktop: [EN](screenshots/manage-1440.png) · [TA](screenshots/manage-1440-ta.png)              |
 | Donation acknowledgement page + PDF | #7    | mobile: [EN](screenshots/receipt-390.png) · [TA](screenshots/receipt-390-ta.png) — desktop: [EN](screenshots/receipt-1440.png) · [TA](screenshots/receipt-1440-ta.png)          |
-| Get Help panel                      | #8    | —                                                                                                                                                                               |
+| Get Help panel                      | #8    | mobile: [EN](screenshots/help-390.png) · [TA](screenshots/help-390-ta.png) — desktop: [EN](screenshots/help-1440.png) · [TA](screenshots/help-1440-ta.png)                      |
 | Owner dashboard                     | #9    | —                                                                                                                                                                               |
 
 Open the `.html` file in a browser; add `?lang=ta` for Tamil. Interface text is translated (draft
@@ -64,6 +64,29 @@ language (English shown; Tamil uses the same layout).
 the panel matches the page; the bank-transfer screen shows the amount to transfer; the large-gift
 line became a text link that can wrap; one long Tamil label no longer widens the panel
 (`min-width: 0`), proven by the control check.
+
+## Get Help panel (#8)
+
+The Get Help panel opens on the single page (`#get-help`) in the same sheet / side panel as Donate.
+It is written for people with low digital confidence: one question per screen, large tap targets,
+plain words, and always a human alternative. `help.html` shows every screen in the person's order:
+
+| State | Screen                           | Key rules                                                                                                                            |
+| ----- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| A     | Start                            | Form (5 short steps) or quick contact: call me back, WhatsApp, phone; hours every day 8 AM – 10 PM; "asking does not guarantee help" |
+| B     | Step 1 — who needs help          | Me / someone I know / on someone's behalf                                                                                            |
+| C     | Step 2 — kind of help            | Icon + text tiles, more than one allowed, ✓ on selected; "I don't know how to explain" skips step 3; "life in danger → call 112"     |
+| D     | Step 3 — description (optional)  | Tamil or English, 500 characters, skippable; **no documents, Aadhaar, medical or income proof**                                      |
+| E     | Step 4 — contact (with an error) | Mobile/WhatsApp required; their name or village only when asking for someone else and only if they agree; call language; best time   |
+| F     | Step 5 — consent and send        | Contact consent; third-party consent only when asking for someone else; privacy link                                                 |
+| G     | Sent                             | Reference ID, "we will call you", urgent → phone/WhatsApp; owner notified, request appears as New (#22)                              |
+| H     | Just call me back                | One field + consent                                                                                                                  |
+| I     | Network error                    | Answers kept, try again, WhatsApp/phone                                                                                              |
+| J     | Too many attempts                | Polite wait message, never blames the person, human channel offered                                                                  |
+
+**Senior UX self-review fixes**: selected help tiles show a ✓ as well as a thick border (state never
+shown by one cue alone, and several can be chosen); a "call 112 if a life is in danger" line, because
+the form ends in a call back and is not for emergencies that cannot wait.
 
 ## Legend
 

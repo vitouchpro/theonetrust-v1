@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wireframe — Get Help panel (issue #8)</title>
+    <!--
+      LOW-FIDELITY WIREFRAME. Every state of the Get Help panel on the single page (ADR 0005),
+      opened by #get-help. For people with low digital confidence: one question per screen,
+      big tap targets, plain words, voice-free (no audio needed). Add ?lang=ta for Tamil.
+      [Square brackets] = placeholder or unverified content.
+    -->
+    <link rel="stylesheet" href="wf-states.css" />
+    <style>
+      .tiles {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+      .tile {
+        border: 1px solid var(--ink);
+        border-radius: 10px;
+        min-height: 96px;
+        padding: 10px;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        gap: 4px;
+        background: var(--paper);
+      }
+      .tile.on {
+        border-width: 3px;
+        font-weight: 700;
+      }
+      .tile {
+        position: relative;
+      }
+      .tile .tick {
+        position: absolute;
+        top: 6px;
+        right: 8px;
+        font-weight: 700;
+      }
+      .tile .ico {
+        width: 36px;
+        height: 36px;
+        border: 2px solid var(--ink);
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-weight: 700;
+      }
+      .tile.wide {
+        grid-column: 1 / -1;
+        min-height: 64px;
+      }
+      .big-choice {
+        border: 1px solid var(--ink);
+        border-radius: 10px;
+        min-height: 64px;
+        padding: 12px 14px;
+        display: grid;
+        grid-template-columns: 28px 1fr;
+        gap: 12px;
+        align-items: center;
+        background: var(--paper);
+      }
+      .big-choice.on {
+        border-width: 3px;
+      }
+      .textarea {
+        border: 2px solid var(--dark);
+        border-radius: 6px;
+        min-height: 120px;
+        padding: 10px 12px;
+        color: var(--mid);
+        background: var(--paper);
+      }
+      .counter {
+        text-align: right;
+        font-size: 13px;
+        color: var(--mid);
+      }
+      .times {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+      .shortcut {
+        display: grid;
+        gap: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-head">
+      <h1>Get Help panel — all states (#8)</h1>
+      <p class="muted small">
+        One question per screen. Each frame is one screen of the same panel, in the person's order.
+      </p>
+    </div>
+
+    <div class="gallery">
+      <!-- A. START: choose form or shortcut -->
+      <div>
+        <span class="state-name">A · Start — form or quick contact</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="title" data-i18n="getHelp">Get Help</span
+            ><span class="x" aria-label="Close">✕</span>
+          </div>
+          <div class="frame-body">
+            <h2 data-i18n="startTitle">How would you like to ask for help?</h2>
+            <p class="small muted" data-i18n="startWho">
+              For yourself or for someone you know. [Who the trust can help — scope from the trust]
+            </p>
+            <span class="btn primary block" data-i18n="fillForm"
+              >Tell us what is needed (5 short steps)</span
+            >
+            <div class="shortcut">
+              <span class="btn block" data-i18n="callMeBack">Just call me back</span>
+              <span class="btn block" data-i18n="whatsapp">Chat on WhatsApp</span>
+              <span class="btn block">📞 +91 96005 16999</span>
+            </div>
+            <p class="small muted" data-i18n="hours">Every day, 8 AM – 10 PM</p>
+            <div class="callout small" data-i18n="noGuarantee">
+              Asking does not guarantee help. We will call you to understand your situation.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- B. STEP 1: WHO -->
+      <div>
+        <span class="state-name">B · Step 1 of 5 — who needs help</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="btn link" data-i18n="back">← Back</span><span class="title"></span
+            ><span class="x" aria-label="Close">✕</span>
+          </div>
+          <div class="frame-body">
+            <div class="progress"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+            <div class="small muted"><span data-i18n="step">Step</span> 1 / 5</div>
+            <h2 data-i18n="whoTitle">Who needs help?</h2>
+            <div class="big-choice on"><span class="radio on"></span><b data-i18n="me">Me</b></div>
+            <div class="big-choice">
+              <span class="radio"></span><b data-i18n="someoneIKnow">Someone I know</b>
+            </div>
+            <div class="big-choice">
+              <span class="radio"></span
+              ><b data-i18n="onBehalf">I'm asking on someone's behalf (for example, a volunteer)</b>
+            </div>
+          </div>
+          <div class="frame-foot">
+            <span class="btn primary block" data-i18n="continue">Continue</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- C. STEP 2: KIND OF HELP -->
+      <div>
+        <span class="state-name">C · Step 2 of 5 — kind of help</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="btn link" data-i18n="back">← Back</span><span class="title"></span
+            ><span class="x" aria-label="Close">✕</span>
+          </div>
+          <div class="frame-body">
+            <div class="progress"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+            <div class="small muted"><span data-i18n="step">Step</span> 2 / 5</div>
+            <h2 data-i18n="kindTitle">What kind of help is needed?</h2>
+            <div class="tiles">
+              <div class="tile">
+                <span class="ico">E</span><span data-i18n="education">Education</span>
+              </div>
+              <div class="tile on">
+                <span class="tick" aria-hidden="true">✓</span><span class="ico">F</span
+                ><span data-i18n="food">Food &amp; essentials</span>
+              </div>
+              <div class="tile">
+                <span class="ico">H</span><span data-i18n="health">Health</span>
+              </div>
+              <div class="tile">
+                <span class="ico">!</span><span data-i18n="emergency">Emergency</span>
+              </div>
+              <div class="tile">
+                <span class="ico">L</span><span data-i18n="livelihood">Livelihood</span>
+              </div>
+              <div class="tile"><span class="ico">+</span><span data-i18n="other">Other</span></div>
+              <div class="tile wide">
+                <span data-i18n="dontKnow">I don't know how to explain</span>
+              </div>
+            </div>
+            <div class="callout small" data-i18n="danger">
+              If someone's life is in danger, call 112 now. This form is not for emergencies that
+              cannot wait.
+            </div>
+            <p class="note">
+              Selected tiles show ✓ and a thick border (never colour alone). Real icons with text
+              labels (never icon-only). More than one can be chosen. "I don't know how to explain"
+              skips the description step.
+            </p>
+          </div>
+          <div class="frame-foot">
+            <span class="btn primary block" data-i18n="continue">Continue</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- D. STEP 3: DESCRIPTION -->
+      <div>
+        <span class="state-name">D · Step 3 of 5 — short description (optional)</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="btn link" data-i18n="back">← Back</span><span class="title"></span
+            ><span class="x" aria-label="Close">✕</span>
+          </div>
+          <div class="frame-body">
+            <div class="progress">
+              <i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i>
+            </div>
+            <div class="small muted"><span data-i18n="step">Step</span> 3 / 5</div>
+            <h2 data-i18n="descTitle">Tell us briefly (optional)</h2>
+            <p class="small muted" data-i18n="descHint">
+              In Tamil or English. A few words are enough — we will call you.
+            </p>
+            <div class="textarea">[…]</div>
+            <div class="counter">0 / 500</div>
+            <div class="callout small" data-i18n="noDocs">
+              Please don't send documents, Aadhaar, medical reports or income proof here. If needed,
+              we will ask safely later.
+            </div>
+          </div>
+          <div class="frame-foot">
+            <span class="btn primary block" data-i18n="continue">Continue</span
+            ><span class="btn link" data-i18n="skip">Skip this step</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- E. STEP 4: CONTACT (someone else, with error) -->
+      <div>
+        <span class="state-name"
+          >E · Step 4 of 5 — contact (asking for someone else, with an error)</span
+        >
+        <div class="frame">
+          <div class="frame-head">
+            <span class="btn link" data-i18n="back">← Back</span><span class="title"></span
+            ><span class="x" aria-label="Close">✕</span>
+          </div>
+          <div class="frame-body">
+            <div class="progress">
+              <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i>
+            </div>
+            <div class="small muted"><span data-i18n="step">Step</span> 4 / 5</div>
+            <h2 data-i18n="contactTitle">How can we reach you?</h2>
+            <div class="field">
+              <label data-i18n="yourMobile">Your mobile or WhatsApp number</label>
+              <div class="input error">96005</div>
+              <div class="error-text" data-i18n="mobileError">Enter a 10-digit mobile number</div>
+            </div>
+            <div class="field">
+              <label
+                ><span data-i18n="theirName">Their name or village</span>
+                <span class="muted small" data-i18n="optional">(optional)</span></label
+              >
+              <div class="input">[…]</div>
+              <div class="hint" data-i18n="theirNameHint">
+                Only if they are comfortable sharing it.
+              </div>
+            </div>
+            <div class="field">
+              <label data-i18n="language">Language for the call</label>
+              <div class="seg"><span class="on">தமிழ்</span><span>English</span></div>
+            </div>
+            <div class="field">
+              <label data-i18n="bestTime">Best time to call</label>
+              <div class="times">
+                <span class="chip on" data-i18n="morning">Morning</span
+                ><span class="chip" data-i18n="afternoon">Afternoon</span
+                ><span class="chip" data-i18n="evening">Evening</span
+                ><span class="chip" data-i18n="anytime">Any time</span>
+              </div>
+            </div>
+            <p class="note">
+              "Their name or village" appears only when asking for someone else. Language defaults
+              to the page language.
+            </p>
+          </div>
+          <div class="frame-foot">
+            <span class="btn primary block" data-i18n="continue">Continue</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- F. STEP 5: CONSENT -->
+      <div>
+        <span class="state-name">F · Step 5 of 5 — consent and send</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="btn link" data-i18n="back">← Back</span><span class="title"></span
+            ><span class="x" aria-label="Close">✕</span>
+          </div>
+          <div class="frame-body">
+            <div class="progress">
+              <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i
+              ><i class="on"></i>
+            </div>
+            <div class="small muted"><span data-i18n="step">Step</span> 5 / 5</div>
+            <h2 data-i18n="consentTitle">Before you send</h2>
+            <div class="option on">
+              <span class="check on"></span
+              ><span data-i18n="consentContact"
+                >The trust may call or WhatsApp this number about this request.</span
+              >
+            </div>
+            <div class="option on">
+              <span class="check on"></span
+              ><span data-i18n="consentOther"
+                >I believe the person agrees to this request, or cannot ask for themselves.</span
+              >
+            </div>
+            <p class="small">
+              <span data-i18n="privacyLine">How we use this information:</span>
+              <u data-i18n="privacy">Privacy</u>
+            </p>
+            <div class="callout small" data-i18n="noGuarantee">
+              Asking does not guarantee help. We will call you to understand your situation.
+            </div>
+            <p class="note">
+              The second agreement appears only when asking for someone else. Both are required to
+              send.
+            </p>
+          </div>
+          <div class="frame-foot">
+            <span class="btn primary block" data-i18n="send">Send request</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- G. SENT -->
+      <div>
+        <span class="state-name">G · Sent</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="title" data-i18n="getHelp">Get Help</span
+            ><span class="x" aria-label="Close">✕</span>
+          </div>
+          <div class="frame-body">
+            <div class="status">
+              <div class="icon">✓</div>
+              <h2 data-i18n="sentTitle">Your request is sent</h2>
+              <p data-i18n="sentText">We will call you. Please keep your phone with you.</p>
+            </div>
+            <div class="summary">
+              <div><span data-i18n="reference">Reference</span><span>[HLP-XXXX]</span></div>
+            </div>
+            <p class="small muted" data-i18n="sentHelp">
+              If it's urgent, call or WhatsApp us now: +91 96005 16999 (every day, 8 AM – 10 PM).
+            </p>
+            <p class="note">
+              The owner is notified and the request appears as New in the inbox (#22).
+            </p>
+          </div>
+          <div class="frame-foot">
+            <span class="btn primary block" data-i18n="backToPage">Back to the page</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- H. CALL ME BACK -->
+      <div>
+        <span class="state-name">H · Just call me back (one field)</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="btn link" data-i18n="back">← Back</span><span class="title"></span
+            ><span class="x" aria-label="Close">✕</span>
+          </div>
+          <div class="frame-body">
+            <h2 data-i18n="cbTitle">We'll call you back</h2>
+            <div class="field">
+              <label data-i18n="yourMobile">Your mobile or WhatsApp number</label>
+              <div class="input">[98765 43210]</div>
+            </div>
+            <div class="option on">
+              <span class="check on"></span
+              ><span data-i18n="consentContact"
+                >The trust may call or WhatsApp this number about this request.</span
+              >
+            </div>
+            <p class="small">
+              <span data-i18n="privacyLine">How we use this information:</span>
+              <u data-i18n="privacy">Privacy</u>
+            </p>
+          </div>
+          <div class="frame-foot">
+            <span class="btn primary block" data-i18n="callMe">Call me back</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- I. NETWORK ERROR -->
+      <div>
+        <span class="state-name">I · Not sent — network problem</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="title" data-i18n="getHelp">Get Help</span
+            ><span class="x" aria-label="Close">✕</span>
+          </div>
+          <div class="frame-body">
+            <div class="status" role="alert">
+              <div class="icon">!</div>
+              <h2 data-i18n="netTitle">Not sent yet</h2>
+              <p class="muted" data-i18n="netText">
+                Your answers are kept. Check your internet and try again.
+              </p>
+            </div>
+            <span class="btn primary block" data-i18n="tryAgain">Try again</span>
+            <span class="btn block" data-i18n="whatsapp">Chat on WhatsApp</span>
+            <span class="btn block">📞 +91 96005 16999</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- J. TOO MANY ATTEMPTS -->
+      <div>
+        <span class="state-name">J · Too many attempts</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="title" data-i18n="getHelp">Get Help</span
+            ><span class="x" aria-label="Close">✕</span>
+          </div>
+          <div class="frame-body">
+            <div class="status">
+              <div class="icon">⏳</div>
+              <h2 data-i18n="waitTitle">Please wait a few minutes</h2>
+              <p class="muted" data-i18n="waitText">
+                We've received several requests from this device. If you need help now, call or
+                WhatsApp us.
+              </p>
+            </div>
+            <div class="row">
+              <span class="btn" data-i18n="whatsapp">Chat on WhatsApp</span
+              ><span class="btn">📞 +91 96005 16999</span>
+            </div>
+            <p class="note">
+              Shown by rate limiting / spam protection. Never blames the person; always offers a
+              human channel.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const ta = {
+        getHelp: 'உதவி பெற',
+        startTitle: 'எப்படி உதவி கேட்க விரும்புகிறீர்கள்?',
+        startWho:
+          'உங்களுக்காகவோ உங்களுக்குத் தெரிந்தவருக்காகவோ. [அறக்கட்டளை உதவக்கூடியவர்கள் — அறக்கட்டளை வழங்கும்]',
+        fillForm: 'என்ன தேவை என்று சொல்லுங்கள் (5 சிறிய படிகள்)',
+        callMeBack: 'என்னைத் திரும்ப அழையுங்கள்',
+        whatsapp: 'WhatsApp-ல் பேசுங்கள்',
+        hours: 'தினமும், காலை 8 – இரவு 10',
+        noGuarantee:
+          'கேட்பது உதவிக்கு உத்தரவாதம் அல்ல. உங்கள் நிலையைப் புரிந்துகொள்ள நாங்கள் உங்களை அழைப்போம்.',
+        back: '← பின்செல்',
+        step: 'படி',
+        whoTitle: 'யாருக்கு உதவி தேவை?',
+        me: 'எனக்கு',
+        someoneIKnow: 'எனக்குத் தெரிந்தவருக்கு',
+        onBehalf: 'ஒருவரின் சார்பாகக் கேட்கிறேன் (உதாரணம்: தன்னார்வலர்)',
+        continue: 'தொடரவும்',
+        kindTitle: 'என்ன வகையான உதவி தேவை?',
+        education: 'கல்வி',
+        food: 'உணவு மற்றும் அத்தியாவசியம்',
+        health: 'மருத்துவம்',
+        emergency: 'அவசரம்',
+        livelihood: 'வாழ்வாதாரம்',
+        other: 'பிற',
+        danger:
+          'யாருடைய உயிருக்காவது ஆபத்து என்றால், இப்போதே 112-ஐ அழையுங்கள். காத்திருக்க முடியாத அவசரங்களுக்கு இந்தப் படிவம் இல்லை.',
+        dontKnow: 'எப்படிச் சொல்வது என்று தெரியவில்லை',
+        descTitle: 'சுருக்கமாகச் சொல்லுங்கள் (விருப்பத்திற்குரியது)',
+        descHint: 'தமிழிலோ ஆங்கிலத்திலோ. சில வார்த்தைகள் போதும் — நாங்கள் உங்களை அழைப்போம்.',
+        noDocs:
+          'இங்கே ஆவணங்கள், ஆதார், மருத்துவ அறிக்கைகள் அல்லது வருமானச் சான்றுகளை அனுப்ப வேண்டாம். தேவைப்பட்டால், பின்னர் பாதுகாப்பாகக் கேட்போம்.',
+        skip: 'இந்தப் படியைத் தவிர்',
+        contactTitle: 'உங்களை எப்படித் தொடர்பு கொள்வது?',
+        yourMobile: 'உங்கள் கைபேசி அல்லது WhatsApp எண்',
+        mobileError: '10 இலக்க கைபேசி எண்ணை உள்ளிடவும்',
+        theirName: 'அவரது பெயர் அல்லது ஊர்',
+        optional: '(விருப்பத்திற்குரியது)',
+        theirNameHint: 'அவர் பகிர விரும்பினால் மட்டும்.',
+        language: 'அழைப்புக்கான மொழி',
+        bestTime: 'அழைக்க ஏற்ற நேரம்',
+        morning: 'காலை',
+        afternoon: 'மதியம்',
+        evening: 'மாலை',
+        anytime: 'எப்போதும்',
+        consentTitle: 'அனுப்பும் முன்',
+        consentContact:
+          'இந்தக் கோரிக்கை குறித்து அறக்கட்டளை இந்த எண்ணை அழைக்கலாம் அல்லது WhatsApp செய்யலாம்.',
+        consentOther:
+          'அந்த நபர் இந்தக் கோரிக்கைக்கு ஒப்புக்கொள்கிறார், அல்லது தானே கேட்க முடியாது என்று நம்புகிறேன்.',
+        privacyLine: 'இந்தத் தகவலை நாங்கள் பயன்படுத்தும் விதம்:',
+        privacy: 'தனியுரிமை',
+        send: 'கோரிக்கையை அனுப்பு',
+        sentTitle: 'உங்கள் கோரிக்கை அனுப்பப்பட்டது',
+        sentText: 'நாங்கள் உங்களை அழைப்போம். உங்கள் கைபேசியை அருகில் வைத்திருங்கள்.',
+        reference: 'குறிப்பு எண்',
+        sentHelp:
+          'அவசரம் என்றால், இப்போதே அழையுங்கள் அல்லது WhatsApp செய்யுங்கள்: +91 96005 16999 (தினமும், காலை 8 – இரவு 10).',
+        backToPage: 'பக்கத்திற்குத் திரும்பு',
+        cbTitle: 'நாங்கள் உங்களைத் திரும்ப அழைப்போம்',
+        callMe: 'என்னைத் திரும்ப அழையுங்கள்',
+        netTitle: 'இன்னும் அனுப்பப்படவில்லை',
+        netText:
+          'உங்கள் பதில்கள் சேமிக்கப்பட்டுள்ளன. இணையத்தைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.',
+        tryAgain: 'மீண்டும் முயற்சி செய்',
+        waitTitle: 'சில நிமிடங்கள் காத்திருங்கள்',
+        waitText:
+          'இந்தச் சாதனத்திலிருந்து பல கோரிக்கைகள் வந்துள்ளன. உடனடியாக உதவி தேவை என்றால், அழையுங்கள் அல்லது WhatsApp செய்யுங்கள்.',
+      };
+      if (new URLSearchParams(location.search).get('lang') === 'ta') {
+        document.documentElement.lang = 'ta';
+        for (const el of document.querySelectorAll('[data-i18n]')) {
+          const text = ta[el.dataset.i18n];
+          if (text) el.textContent = text;
+        }
+      }
+    </script>
+  </body>
+</html>
