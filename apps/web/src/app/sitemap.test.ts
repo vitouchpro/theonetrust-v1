@@ -59,6 +59,10 @@ const sitemapMarkdown = readFileSync(sitemapPath, 'utf8');
 const rows = parseSitemap(sitemapMarkdown);
 const appRoutes = [...new Set(flattenRoutes(routes))];
 const isAdmin = (route: string) => route.startsWith('/admin');
+const isPrivateLink = (route: string) => /:token\b/.test(route);
+
+/** ADR 0005: the only public browsing pages are the single page and Razorpay's policy pages. */
+const ALLOWED_PUBLIC_PAGES = ['/', '/privacy', '/terms', '/refund-policy', '*'];
 const expectedTamil = (route: string) =>
   route === '/' ? '/ta/' : route === '*' ? '/ta/*' : `/ta${route}`;
 
@@ -108,6 +112,24 @@ describe('docs/design/sitemap.md matches the app', () => {
   it('marks nothing as Built that the app does not have', () => {
     const claimed = rows.filter((r) => r.status.startsWith('Built')).map((r) => r.route);
     expect(claimed.filter((route) => !appRoutes.includes(route))).toEqual([]);
+  });
+});
+
+describe('single public page (ADR 0005)', () => {
+  it('has no public browsing pages beyond the single page and the policy pages', () => {
+    const publicPages = rows
+      .map((r) => r.route)
+      .filter((route) => !isAdmin(route) && !isPrivateLink(route));
+    expect(publicPages.filter((route) => !ALLOWED_PUBLIC_PAGES.includes(route))).toEqual([]);
+  });
+
+  it('documents every allowed public page', () => {
+    for (const route of ALLOWED_PUBLIC_PAGES) {
+      expect(
+        rows.some((r) => r.route === route),
+        route,
+      ).toBe(true);
+    }
   });
 });
 

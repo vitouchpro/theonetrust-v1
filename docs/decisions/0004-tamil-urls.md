@@ -6,8 +6,9 @@
 
 ## Decision
 
-- English pages are served at the root (`/`, `/donate`, `/help`, …).
-- Tamil pages mirror every public route under `/ta/` (`/ta/`, `/ta/donate`, `/ta/help`, …).
+- English pages are served at the root (`/`, `/terms`, …).
+- Tamil pages mirror every public route under `/ta/` (`/ta/`, `/ta/terms`, …). The public site is a
+  single page plus policy pages (ADR 0005).
 - Anchor IDs on the landing page are the same in both languages (`/ta/#transparency`).
 - The language switch moves to the same page in the other language and keeps the query string
   and any in-progress form state (e.g. chosen programme and amount).
@@ -15,8 +16,8 @@
   Tamil-preferring browser may see a small, dismissible "தமிழில் படிக்க" suggestion.
 - Each page declares `<html lang>` (`en` / `ta`), a canonical URL, and `hreflang` alternates
   (`en-IN`, `ta-IN`, `x-default` → English).
-- The owner dashboard (`/admin/*`) is not mirrored under `/ta/`; its UI language is an open question
-  for the owner (see `docs/design/sitemap.md`).
+- The owner dashboard (`/admin/*`) is not mirrored under `/ta/`; it offers Tamil and English with a
+  toggle saved to the owner's account (owner decision, 31 Oct 2026).
 
 ## Why
 
