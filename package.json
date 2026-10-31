@@ -1,7 +1,7 @@
 {
   "name": "theonetrust",
   "private": true,
-  "description": "Theonetrust.in — bilingual charitable trust website, donation platform and owner dashboard",
+  "description": "Theonetrust.in \u2014 bilingual charitable trust website, donation platform and owner dashboard",
   "packageManager": "pnpm@10.28.0",
   "engines": {
     "node": ">=22.12.0"
@@ -21,7 +21,8 @@
     "test:e2e": "pnpm --filter @theonetrust/web test:e2e",
     "check:tests-required": "node scripts/check-tests-required.mjs",
     "verify": "node scripts/verify.mjs",
-    "verify:quick": "node scripts/verify.mjs --quick"
+    "verify:quick": "node scripts/verify.mjs --quick",
+    "wireframes": "node scripts/render-wireframes.mjs"
   },
   "devDependencies": {
     "@eslint/js": "9.39.5",
