@@ -8,6 +8,8 @@
       LOW-FIDELITY WIREFRAME. Structure only: section order, content blocks, states.
       Greyscale on purpose — colours, fonts and imagery come from the design tokens later.
       [Square brackets] = placeholder or unverified content (issue #1). Do not ship this file.
+      Language: add ?lang=ta to the URL for the Tamil version (interface text is translated so
+      real Tamil lengths are tested; placeholders and engineer notes stay in English).
     -->
     <style>
       :root {
@@ -29,6 +31,13 @@
           sans-serif;
         color: var(--ink);
         background: var(--fill-2);
+      }
+      :lang(ta) body,
+      body:lang(ta) {
+        line-height: 1.7;
+      }
+      a {
+        color: inherit;
       }
       .wrap {
         max-width: 1200px;
@@ -99,13 +108,18 @@
         padding: 8px;
       }
       .btn {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         border: 2px solid var(--ink);
         border-radius: 6px;
-        padding: 10px 18px;
+        padding: 8px 16px;
         font-weight: 600;
         background: var(--paper);
         min-height: 44px;
+        white-space: nowrap;
+        color: var(--ink);
+        text-decoration: none;
       }
       .btn.primary {
         background: var(--dark);
@@ -131,11 +145,25 @@
       .chip {
         border: 1px solid var(--ink);
         border-radius: 999px;
-        padding: 6px 14px;
+        padding: 8px 14px;
         background: var(--paper);
+        color: var(--ink);
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+      }
+      .trustline {
+        font-size: 13px;
+        color: var(--mid);
+        margin-top: 10px;
+      }
+      .skip {
+        position: absolute;
+        left: 8px;
+        top: -60px;
       }
 
-      /* Header */
+      /* ── Header ─────────────────────────────────────────────── */
       header {
         position: sticky;
         top: 0;
@@ -146,7 +174,7 @@
       header .wrap {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 8px;
         min-height: 64px;
       }
       .logo {
@@ -155,36 +183,97 @@
         gap: 8px;
         font-weight: 700;
         margin-right: auto;
+        min-width: 0;
       }
       .logo i {
+        flex: none;
         width: 36px;
         height: 36px;
         border: 2px solid var(--ink);
         border-radius: 50%;
         display: inline-block;
       }
+      .logo span {
+        display: none;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
       nav.desktop {
         display: none;
-        gap: 18px;
+        gap: 16px;
+        white-space: nowrap;
+        font-size: 14px;
       }
       .lang {
         border: 1px solid var(--ink);
         border-radius: 6px;
-        padding: 6px 10px;
+        min-height: 44px;
+        min-width: 44px;
+        padding: 0 10px;
+        display: inline-flex;
+        align-items: center;
         font-size: 13px;
+        white-space: nowrap;
+        background: var(--paper);
       }
       .menu {
         border: 2px solid var(--ink);
         border-radius: 6px;
-        padding: 8px 12px;
-        font-weight: 600;
+        min-height: 44px;
+        min-width: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         white-space: nowrap;
+        font-weight: 700;
+        background: var(--paper);
       }
-      .desktop-only {
+      .menu .menu-text {
+        display: none;
+      }
+      .gethelp-head {
+        display: none;
+      }
+      .lang-long {
         display: none;
       }
 
-      /* Hero */
+      /* Help strip: help seekers find phone/WhatsApp immediately */
+      .helpstrip {
+        background: var(--fill);
+        border-bottom: 1px solid var(--line);
+        font-size: 13px;
+      }
+      .helpstrip .wrap {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 14px;
+        align-items: center;
+        min-height: 40px;
+        padding-block: 6px;
+      }
+
+      /* Floating WhatsApp / call (mobile) */
+      .fab {
+        position: fixed;
+        right: 16px;
+        bottom: 16px;
+        z-index: 11;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: var(--dark);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font: 700 11px/1.1 system-ui;
+        text-align: center;
+        border: 2px solid var(--paper);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      /* ── Hero ───────────────────────────────────────────────── */
       .hero .grid {
         grid-template-columns: 1fr;
         align-items: center;
@@ -227,9 +316,17 @@
       .bento {
         grid-template-columns: 1fr;
       }
+      .card {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+      }
       .card .img {
         min-height: 110px;
         margin-bottom: 10px;
+      }
+      .card.general {
+        border: 2px solid var(--ink);
       }
       .tag {
         font: 11px monospace;
@@ -237,23 +334,9 @@
         padding: 2px 6px;
         border-radius: 4px;
       }
-
-      /* Steps */
-      .steps {
-        grid-template-columns: 1fr;
-        counter-reset: step;
-      }
-      .step::before {
-        counter-increment: step;
-        content: counter(step);
-        display: grid;
-        place-items: center;
-        width: 32px;
-        height: 32px;
-        border: 2px solid var(--ink);
-        border-radius: 50%;
-        font-weight: 700;
-        margin-bottom: 8px;
+      .go {
+        font-weight: 600;
+        text-decoration: underline;
       }
 
       /* Impact */
@@ -277,7 +360,6 @@
         margin: 0;
       }
 
-      /* Docs list */
       .doc {
         display: grid;
         grid-template-columns: 1fr auto;
@@ -286,8 +368,6 @@
         padding: 12px 0;
         border-bottom: 1px solid var(--line);
       }
-
-      /* FAQ */
       details {
         border-bottom: 1px solid var(--line);
         padding: 12px 0;
@@ -295,9 +375,10 @@
       summary {
         font-weight: 600;
         cursor: pointer;
+        min-height: 32px;
       }
 
-      /* Final CTA */
+      /* Final donate band (includes the 4 steps — replaces a separate "How it works" section) */
       .cta {
         background: var(--dark);
         color: #fff;
@@ -307,19 +388,82 @@
       .cta h2 {
         color: #fff;
       }
-      .cta .chip,
-      .cta .btn {
+      .cta .muted,
+      .cta .trustline,
+      .cta .note {
+        color: #ddd;
+      }
+      .seg {
+        display: inline-flex;
+        border: 1px solid #fff;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .seg span {
+        padding: 10px 16px;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+      }
+      .seg span.on {
+        background: #fff;
         color: var(--ink);
+        font-weight: 700;
+      }
+      .steps {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 18px;
+        counter-reset: s;
+      }
+      .steps div {
+        font-size: 13px;
+        border-top: 1px solid #888;
+        padding-top: 8px;
+      }
+      .steps div::before {
+        counter-increment: s;
+        content: counter(s) ' · ';
+        font-weight: 700;
       }
 
       footer {
         background: var(--paper);
-        padding: 32px 0;
+        padding: 32px 0 96px;
       }
       .cols {
         grid-template-columns: 1fr 1fr;
       }
 
+      /* ── ≥ 30em (480px): show trust name next to the logo ───── */
+      @media (min-width: 30em) {
+        .logo span {
+          display: inline;
+        }
+      }
+      /* ── ≥ 48em (768px) tablet ─────────────────────────────── */
+      @media (min-width: 48em) {
+        .gethelp-head {
+          display: inline-flex;
+        }
+        .lang-long {
+          display: inline;
+        }
+        .lang-short {
+          display: none;
+        }
+        .menu .menu-text {
+          display: inline;
+        }
+        .menu {
+          padding: 0 12px;
+        }
+        .steps {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+      /* ── ≥ 64em (1024px) ───────────────────────────────────── */
       @media (min-width: 64em) {
         h1 {
           font-size: 52px;
@@ -330,11 +474,7 @@
         section {
           padding: 72px 0;
         }
-        nav.desktop,
-        .desktop-only {
-          display: flex;
-        }
-        .menu {
+        .fab {
           display: none;
         }
         .hero .grid {
@@ -345,7 +485,7 @@
           min-height: 420px;
         }
         .facts {
-          grid-template-columns: repeat(5, 1fr);
+          grid-template-columns: repeat(4, 1fr);
         }
         .about .grid {
           grid-template-columns: 1fr 1fr;
@@ -355,25 +495,19 @@
           grid-template-columns: repeat(4, 1fr);
           grid-auto-rows: minmax(150px, auto);
         }
-        .bento .card:first-child {
+        .bento .card.general {
           grid-column: span 2;
           grid-row: span 2;
         }
-        .bento .card:first-child .img {
+        .bento .card.general .img {
           min-height: 260px;
         }
-        .bento .card:nth-child(4),
-        .bento .card:nth-child(6) {
+        .bento .card:nth-child(6),
+        .bento .card:nth-child(7) {
           grid-column: span 2;
-        }
-        .steps {
-          grid-template-columns: repeat(4, 1fr);
         }
         .helps {
           grid-template-columns: repeat(3, 1fr);
-        }
-        .metrics {
-          grid-template-columns: repeat(2, 1fr);
         }
         .impact .two {
           grid-template-columns: 1fr 1fr;
@@ -385,337 +519,393 @@
         .cols {
           grid-template-columns: 2fr 1fr 1fr 1fr;
         }
+        footer {
+          padding-bottom: 32px;
+        }
+      }
+      /* ── ≥ 80em (1280px): section links move out of the menu into the header ── */
+      @media (min-width: 80em) {
+        nav.desktop {
+          display: flex;
+        }
+        .menu {
+          display: none;
+        }
+        :lang(ta) nav.desktop {
+          gap: 12px;
+          font-size: 13px;
+        }
       }
     </style>
   </head>
   <body>
+    <a class="skip btn" href="#main" data-i18n="skip">Skip to main content</a>
+
     <!-- 1. HEADER -->
     <header>
       <div class="wrap">
-        <div class="logo"><i></i><span>[Trust name — #1]</span></div>
+        <div class="logo"><i></i><span data-i18n="trustName">[Trust name — #1]</span></div>
         <nav class="desktop" aria-label="Sections">
-          <a href="#about">About</a><a href="#ways-we-help">Ways we help</a
-          ><a href="#impact">Impact</a> <a href="#transparency">Transparency</a
-          ><a href="#contact">Contact</a>
+          <a href="#about" data-i18n="navAbout">About</a
+          ><a href="#ways-we-help" data-i18n="navWays">Ways we help</a>
+          <a href="#impact" data-i18n="navImpact">Impact</a
+          ><a href="#transparency" data-i18n="navTransparency">Transparency</a>
+          <a href="#contact" data-i18n="navContact">Contact</a>
         </nav>
-        <span class="lang desktop-only">தமிழ் | EN</span>
-        <span class="btn desktop-only">Get Help</span>
-        <span class="btn primary">Donate</span>
-        <span class="menu">☰ Menu</span>
+        <span class="lang" aria-label="Language"
+          ><span class="lang-short" data-i18n="langShort">த</span
+          ><span class="lang-long" data-i18n="langLong">தமிழ்</span></span
+        >
+        <a class="btn gethelp-head" href="#get-help" data-i18n="getHelp">Get Help</a>
+        <a class="btn primary" href="#donate" data-i18n="donate">Donate</a>
+        <span class="menu" aria-label="Menu"
+          >☰<span class="menu-text" data-i18n="menu">&nbsp;Menu</span></span
+        >
       </div>
     </header>
 
-    <!-- 2. HERO -->
-    <section class="hero" id="top">
+    <!-- 1b. HELP STRIP -->
+    <div class="helpstrip">
       <div class="wrap">
-        <span class="label">2 · Hero — editorial, two columns on desktop</span>
-        <div class="grid">
-          <div>
-            <div class="eyebrow">[Mission label — draft]</div>
-            <h1>[Headline — draft: "Together, we create a better tomorrow."]</h1>
-            <p class="muted">
-              [One short paragraph about the trust's real scope — from verified facts only]
-            </p>
-            <div class="row" style="margin-top: 16px">
-              <span class="btn primary">Donate now</span><span class="btn">Get Help</span>
+        <b data-i18n="needHelp">Need help?</b>
+        <a href="tel:+919600516999"><span data-i18n="call">Call</span> 96005 16999</a>
+        <a href="#whatsapp">WhatsApp</a>
+        <a href="#get-help" data-i18n="askForHelp">Ask for help →</a>
+        <span class="muted" data-i18n="hours">Every day, 8 AM – 10 PM</span>
+      </div>
+    </div>
+
+    <main id="main">
+      <!-- 2. HERO -->
+      <section class="hero" id="top">
+        <div class="wrap">
+          <span class="label">2 · Hero — editorial, two columns on desktop</span>
+          <div class="grid">
+            <div>
+              <div class="eyebrow">[Mission label — draft]</div>
+              <h1 data-i18n="heroTitle">
+                [Headline — draft: "Together, we create a better tomorrow."]
+              </h1>
+              <p class="muted">
+                [One short paragraph about the trust's real scope — from verified facts only]
+              </p>
+              <div class="row" style="margin-top: 16px">
+                <a class="btn primary" href="#donate" data-i18n="donateNow">Donate now</a>
+                <a class="btn" href="#get-help" data-i18n="getHelp">Get Help</a>
+              </div>
+              <p class="trustline" data-i18n="trustLine">
+                🔒 Secure payment via Razorpay · UPI, cards, netbanking · Acknowledgement after
+                verified payment
+              </p>
+              <p class="note">
+                Donate opens the donate panel (#7). Get Help opens the Get Help panel (#8). No
+                urgency, counts or deadlines.
+              </p>
             </div>
-            <p class="note">
-              Donate opens the donate panel (#7). Get Help opens the Get Help panel (#8). No
-              urgency, counts or deadlines.
-            </p>
+            <div class="img">[Approved real photo — or typographic hero if none is approved]</div>
           </div>
-          <div class="img">[Approved real photo — or typographic hero if none is approved]</div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- 3. ABOUT + TRUST FACTS STRIP -->
-    <section class="about" id="about">
-      <div class="wrap">
-        <span class="label">3 · About — introduction + trust facts strip</span>
-        <div class="grid">
-          <div>
-            <h2>About the trust</h2>
-            <p class="muted">[Short introduction, mission and vision — owner to supply]</p>
+      <!-- 3. ABOUT + TRUST FACTS STRIP -->
+      <section class="about" id="about">
+        <div class="wrap">
+          <span class="label">3 · About — introduction + trust facts strip</span>
+          <div class="grid">
+            <div>
+              <h2 data-i18n="aboutTitle">About the trust</h2>
+              <p class="muted">[Short introduction, mission and vision — owner to supply]</p>
+            </div>
+            <div class="img" style="min-height: 160px">[Supporting photo — optional]</div>
           </div>
-          <div class="img" style="min-height: 160px">[Supporting photo — optional]</div>
-        </div>
-        <div class="facts" style="margin-top: 20px">
-          <div class="fact"><b>Location</b>Kanchipuram, Tamil Nadu</div>
-          <div class="fact"><b>Contact</b>+91 96005 16999</div>
-          <div class="fact hidden"><b>Legal name</b>Hidden until verified</div>
-          <div class="fact hidden"><b>Registration</b>Hidden until verified</div>
-          <div class="fact hidden"><b>Tax approval</b>Hidden until verified</div>
-        </div>
-        <p class="note">
-          Dashed = unknown fact. In the real site unknown facts are NOT shown at all; the strip
-          shrinks to what is verified.
-        </p>
-      </div>
-    </section>
-
-    <!-- 4. WAYS WE HELP (BENTO) -->
-    <section id="ways-we-help">
-      <div class="wrap">
-        <span class="label">4 · Ways we help — bento grid</span>
-        <h2>Ways we help</h2>
-        <p class="muted">[Final list from the trust — #1]</p>
-        <div class="grid bento" style="margin-top: 16px">
-          <div class="box card">
-            <div class="img">[Photo]</div>
-            <h3>Education</h3>
-            <p class="muted">[Who it is for · one line]</p>
-            <div class="row">
-              <span class="tag">General fund</span><a href="#donate">Donate to this →</a>
+          <div class="facts" style="margin-top: 20px">
+            <div class="fact">
+              <b data-i18n="factArea">Area</b
+              ><span data-i18n="kanchipuram">Kanchipuram, Tamil Nadu</span>
+            </div>
+            <div class="fact hidden">
+              <b data-i18n="factName">Legal name</b>Hidden until verified
+            </div>
+            <div class="fact hidden">
+              <b data-i18n="factReg">Registration</b>Hidden until verified
+            </div>
+            <div class="fact hidden">
+              <b data-i18n="factTax">Tax approval</b>Hidden until verified
             </div>
           </div>
-          <div class="box card">
-            <div class="img">[Photo]</div>
-            <h3>Food &amp; essentials</h3>
-            <p class="muted">[One line]</p>
-            <a href="#donate">Donate to this →</a>
-          </div>
-          <div class="box card">
-            <div class="img">[Photo]</div>
-            <h3>Health access</h3>
-            <p class="muted">[One line]</p>
-            <a href="#donate">Donate to this →</a>
-          </div>
-          <div class="box card">
-            <div class="img">[Photo]</div>
-            <h3>Emergency support</h3>
-            <p class="muted">[One line]</p>
-            <a href="#donate">Donate to this →</a>
-          </div>
-          <div class="box card">
-            <div class="img">[Photo]</div>
-            <h3>Livelihood</h3>
-            <p class="muted">[One line]</p>
-            <a href="#donate">Donate to this →</a>
-          </div>
-          <div class="box card">
-            <div class="img">[Photo]</div>
-            <h3>Other help</h3>
-            <p class="muted">[One line]</p>
-            <a href="#donate">Donate to this →</a>
-          </div>
+          <p class="note">
+            Facts that prove the trust is real (contact details live in Contact). Dashed = unknown;
+            on the real site unknown facts are NOT shown and the strip shrinks.
+          </p>
         </div>
-        <p class="note">
-          Each card opens the donate panel with that need pre-selected. Each card says whether gifts
-          are general or earmarked. Categories are a draft until the trust confirms them.
-        </p>
-      </div>
-    </section>
+      </section>
 
-    <!-- 5. HOW A DONATION HELPS -->
-    <section id="how-donations-help">
-      <div class="wrap">
-        <span class="label">5 · How a donation helps</span>
-        <h2>How a donation helps</h2>
-        <div class="grid helps">
-          <div class="box">
-            <b>[₹ amount]</b>
-            <p class="muted">[What it can support — illustrative]</p>
+      <!-- 4. WAYS WE HELP (BENTO) -->
+      <section id="ways-we-help">
+        <div class="wrap">
+          <span class="label">4 · Ways we help — bento grid</span>
+          <h2 data-i18n="waysTitle">Ways we help</h2>
+          <p class="muted">[Final list from the trust — #1]</p>
+          <div class="grid bento" style="margin-top: 16px">
+            <a class="box card general" href="#donate"
+              ><div class="img">[Photo]</div>
+              <h3 data-i18n="general">Where it's needed most</h3>
+              <p class="muted" data-i18n="generalText">
+                A general donation the trust uses for the most urgent needs.
+              </p>
+              <span class="tag" data-i18n="generalTag">General fund</span>
+              <span class="go" data-i18n="give">Give →</span></a
+            >
+            <a class="box card" href="#donate"
+              ><div class="img">[Photo]</div>
+              <h3 data-i18n="education">Education</h3>
+              <p class="muted">[One line]</p>
+              <span class="go" data-i18n="give">Give →</span></a
+            >
+            <a class="box card" href="#donate"
+              ><div class="img">[Photo]</div>
+              <h3 data-i18n="food">Food &amp; essentials</h3>
+              <p class="muted">[One line]</p>
+              <span class="go" data-i18n="give">Give →</span></a
+            >
+            <a class="box card" href="#donate"
+              ><div class="img">[Photo]</div>
+              <h3 data-i18n="health">Health access</h3>
+              <p class="muted">[One line]</p>
+              <span class="go" data-i18n="give">Give →</span></a
+            >
+            <a class="box card" href="#donate"
+              ><div class="img">[Photo]</div>
+              <h3 data-i18n="emergency">Emergency support</h3>
+              <p class="muted">[One line]</p>
+              <span class="go" data-i18n="give">Give →</span></a
+            >
+            <a class="box card" href="#donate"
+              ><div class="img">[Photo]</div>
+              <h3 data-i18n="livelihood">Livelihood</h3>
+              <p class="muted">[One line]</p>
+              <span class="go" data-i18n="give">Give →</span></a
+            >
+            <a class="box card" href="#donate"
+              ><div class="img">[Photo]</div>
+              <h3 data-i18n="other">Other help</h3>
+              <p class="muted">[One line]</p>
+              <span class="go" data-i18n="give">Give →</span></a
+            >
           </div>
-          <div class="box">
-            <b>[₹ amount]</b>
-            <p class="muted">[What it can support — illustrative]</p>
-          </div>
-          <div class="box">
-            <b>[₹ amount]</b>
-            <p class="muted">[What it can support — illustrative]</p>
-          </div>
+          <p class="note">
+            The whole card is one tap target and opens the donate panel with that need pre-selected.
+            The large card is the general fund, so no category looks more important than another.
+            Categories are a draft until the trust confirms them.
+          </p>
         </div>
-        <p class="note">
-          Only shown when the trust can verify these costs; marked "illustrative". Also explains how
-          admin costs and unallocated funds are handled. Hidden if not verified.
-        </p>
-      </div>
-    </section>
+      </section>
 
-    <!-- 6. HOW IT WORKS -->
-    <section id="how-it-works">
-      <div class="wrap">
-        <span class="label">6 · How it works</span>
-        <h2>How it works</h2>
-        <div class="grid steps">
-          <div class="box step">
-            <b>Choose a need</b>
-            <p class="muted">or give to the general fund</p>
-          </div>
-          <div class="box step">
-            <b>Choose an amount</b>
-            <p class="muted">from ₹1, once or monthly</p>
-          </div>
-          <div class="box step">
-            <b>Pay securely</b>
-            <p class="muted">UPI, card or netbanking via Razorpay</p>
-          </div>
-          <div class="box step">
-            <b>Get an acknowledgement</b>
-            <p class="muted">and updates on the work</p>
-          </div>
-        </div>
-        <p class="note">Links: "Refund &amp; cancellation policy" and "Payment help" (FAQ).</p>
-      </div>
-    </section>
-
-    <!-- 7. IMPACT & STORIES -->
-    <section class="impact" id="impact">
-      <div class="wrap">
-        <span class="label">7 · Impact &amp; stories — two states</span>
-        <h2>Our impact</h2>
-        <div class="grid two" style="margin-top: 20px">
-          <div class="variant">
-            <span class="label">State A · verified data exists</span>
-            <div class="grid metrics">
-              <div class="metric box"><b>[number]</b><span class="muted">[label]</span></div>
-              <div class="metric box"><b>[number]</b><span class="muted">[label]</span></div>
-              <div class="metric box"><b>[number]</b><span class="muted">[label]</span></div>
-              <div class="metric box"><b>[number]</b><span class="muted">[label]</span></div>
+      <!-- 5. HOW A DONATION HELPS (hidden unless verified) -->
+      <section id="how-donations-help">
+        <div class="wrap">
+          <span class="label">5 · How a donation helps — hidden unless costs are verified</span>
+          <h2 data-i18n="helpsTitle">How a donation helps</h2>
+          <div class="grid helps">
+            <div class="box">
+              <b>[₹ amount]</b>
+              <p class="muted">[What it can support — illustrative]</p>
             </div>
-            <p class="note">
-              Each metric shows source and period, e.g. "Apr 2025 – Mar 2026 · source: annual
-              report".
-            </p>
-            <div class="box" style="margin-top: 12px">
-              <div class="row">
-                <div class="img" style="min-height: 80px; width: 120px">[Consented photo]</div>
-                <div style="flex: 1">
-                  <b>[Story title]</b>
-                  <p class="muted">[Short consented story — minors anonymous]</p>
+            <div class="box">
+              <b>[₹ amount]</b>
+              <p class="muted">[What it can support — illustrative]</p>
+            </div>
+            <div class="box">
+              <b>[₹ amount]</b>
+              <p class="muted">[What it can support — illustrative]</p>
+            </div>
+          </div>
+          <p class="note">
+            Shown only when the trust can verify these costs; marked "illustrative"; explains admin
+            costs and unallocated funds.
+          </p>
+        </div>
+      </section>
+
+      <!-- 6. IMPACT & STORIES -->
+      <section class="impact" id="impact">
+        <div class="wrap">
+          <span class="label">6 · Impact &amp; stories — two states</span>
+          <h2 data-i18n="impactTitle">Our impact</h2>
+          <div class="grid two" style="margin-top: 20px">
+            <div class="variant">
+              <span class="label">State A · verified data exists</span>
+              <div class="grid metrics">
+                <div class="metric box"><b>[number]</b><span class="muted">[label]</span></div>
+                <div class="metric box"><b>[number]</b><span class="muted">[label]</span></div>
+                <div class="metric box"><b>[number]</b><span class="muted">[label]</span></div>
+                <div class="metric box"><b>[number]</b><span class="muted">[label]</span></div>
+              </div>
+              <p class="note">
+                Each metric shows source and period, e.g. "Apr 2025 – Mar 2026 · source: annual
+                report".
+              </p>
+              <div class="box" style="margin-top: 12px">
+                <div class="row">
+                  <div class="img" style="min-height: 80px; width: 120px">[Consented photo]</div>
+                  <div style="flex: 1; min-width: 140px">
+                    <b>[Story title]</b>
+                    <p class="muted">[Short consented story — minors anonymous]</p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="variant">
-            <span class="label">State B · no verified data yet (launch default)</span>
-            <div class="box">
-              <h3>What we are doing now</h3>
-              <p class="muted">
-                [Factual statement of current activities — no numbers, never zeros]
-              </p>
-              <a href="#transparency">See our documents →</a>
+            <div class="variant">
+              <span class="label">State B · launch default</span>
+              <div class="box">
+                <h3 data-i18n="nowTitle">What we are doing now</h3>
+                <p class="muted">
+                  [Factual statement of current activities — no numbers, never zeros]
+                </p>
+                <a href="#transparency" data-i18n="seeDocs">See our documents →</a>
+              </div>
+              <p class="note">Shown until the owner publishes sourced, dated figures.</p>
             </div>
-            <p class="note">
-              Shown instead of metrics until the owner publishes sourced, dated figures.
-            </p>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- 8. TRANSPARENCY CENTRE -->
-    <section id="transparency">
-      <div class="wrap">
-        <span class="label">8 · Transparency centre</span>
-        <h2>Transparency</h2>
-        <div class="box">
-          <div class="doc">
-            <div>
-              <b>[Registration document]</b>
-              <div class="muted">English · [date] · PDF</div>
-            </div>
-            <span class="btn">Download</span>
-          </div>
-          <div class="doc">
-            <div>
-              <b>[Annual report 2025–26]</b>
-              <div class="muted">Tamil · [date] · PDF</div>
-            </div>
-            <span class="btn">Download</span>
-          </div>
-          <div class="doc">
-            <div>
-              <b>[Donation use / allocation policy]</b>
-              <div class="muted">English · [date] · PDF</div>
-            </div>
-            <span class="btn">Download</span>
-          </div>
-        </div>
-        <p class="note">
-          Only owner-approved documents. Empty state: "Documents will be published here." — never
-          fake entries.
-        </p>
-      </div>
-    </section>
-
-    <!-- 9. FAQ -->
-    <section id="faq">
-      <div class="wrap">
-        <span class="label">9 · FAQ</span>
-        <h2>Questions</h2>
-        <div class="box">
-          <details open>
-            <summary>How is my donation used?</summary>
-            <p class="muted">[Answer from the trust]</p>
-          </details>
-          <details>
-            <summary>My UPI payment failed — why?</summary>
-            <p class="muted">Bank / new-user UPI limits; try card, netbanking or bank transfer.</p>
-          </details>
-          <details><summary>When do I get my acknowledgement?</summary></details>
-          <details>
-            <summary>Can I claim a tax deduction?</summary>
-            <p class="muted">Honest answer per the trust's actual approval status.</p>
-          </details>
-          <details><summary>How do I stop monthly giving?</summary></details>
-          <details><summary>How do I ask for help?</summary></details>
-          <details><summary>How is my information used?</summary></details>
-        </div>
-      </div>
-    </section>
-
-    <!-- 10. CONTACT -->
-    <section class="contact" id="contact">
-      <div class="wrap">
-        <span class="label">10 · Contact</span>
-        <h2>Contact us</h2>
-        <div class="grid">
+      <!-- 7. TRANSPARENCY -->
+      <section id="transparency">
+        <div class="wrap">
+          <span class="label">7 · Transparency centre</span>
+          <h2 data-i18n="transparencyTitle">Transparency</h2>
           <div class="box">
-            <p><b>Phone &amp; WhatsApp</b><br />+91 96005 16999</p>
-            <p><b>Email</b><br />info.theonetrust@gmail.com</p>
-            <p>
-              <b>Location</b><br />Kanchipuram, Tamil Nadu
-              <span class="muted">[full address — client to share]</span>
-            </p>
-            <p><b>Call hours</b><br />Every day, 8 AM – 10 PM</p>
-          </div>
-          <div class="box">
-            <h3>Need help?</h3>
-            <p class="muted">Ask for support for yourself or someone you know.</p>
-            <div class="row">
-              <span class="btn">Get Help</span><span class="btn">Chat on WhatsApp</span>
+            <div class="doc">
+              <div>
+                <b>[Registration document]</b>
+                <div class="muted">English · [date] · PDF</div>
+              </div>
+              <span class="btn" data-i18n="download">Download</span>
             </div>
-            <p class="note">Get Help looks different from Donate (secondary style).</p>
+            <div class="doc">
+              <div>
+                <b>[Annual report 2025–26]</b>
+                <div class="muted">Tamil · [date] · PDF</div>
+              </div>
+              <span class="btn" data-i18n="download">Download</span>
+            </div>
+            <div class="doc">
+              <div>
+                <b>[Donation use / allocation policy]</b>
+                <div class="muted">English · [date] · PDF</div>
+              </div>
+              <span class="btn" data-i18n="download">Download</span>
+            </div>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 11. FINAL CTA -->
-    <section id="donate-cta">
-      <div class="wrap">
-        <span class="label">11 · Final call to action</span>
-        <div class="cta">
-          <h2>[Draft: "Your contribution can change a life."]</h2>
-          <div class="row" style="margin: 14px 0">
-            <span class="chip">₹500</span><span class="chip">₹1,000</span
-            ><span class="chip">₹2,000</span><span class="chip">₹5,000</span
-            ><span class="chip">Other</span>
-          </div>
-          <span class="btn">Donate now</span>
-          <p class="note" style="color: #ddd">
-            Choosing an amount opens the donate panel with it pre-filled. Custom amounts from ₹1.
+          <p class="note">
+            Only owner-approved documents. Empty state: "Documents will be published here." — never
+            fake entries.
           </p>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- 12. FOOTER -->
+      <!-- 8. FAQ -->
+      <section id="faq">
+        <div class="wrap">
+          <span class="label">8 · FAQ</span>
+          <h2 data-i18n="faqTitle">Questions</h2>
+          <div class="box">
+            <details open>
+              <summary data-i18n="q1">How is my donation used?</summary>
+              <p class="muted">[Answer from the trust]</p>
+            </details>
+            <details><summary data-i18n="q2">My UPI payment failed — why?</summary></details>
+            <details><summary data-i18n="q3">When do I get my acknowledgement?</summary></details>
+            <details><summary data-i18n="q4">Can I claim a tax deduction?</summary></details>
+            <details><summary data-i18n="q5">How do I stop monthly giving?</summary></details>
+            <details><summary data-i18n="q6">How is my information used?</summary></details>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9. CONTACT + GET HELP -->
+      <section class="contact" id="contact">
+        <div class="wrap">
+          <span class="label">9 · Contact and Get Help</span>
+          <h2 data-i18n="contactTitle">Contact us</h2>
+          <div class="grid">
+            <div class="box">
+              <p><b data-i18n="phoneWa">Phone &amp; WhatsApp</b><br />+91 96005 16999</p>
+              <p><b data-i18n="email">Email</b><br />info.theonetrust@gmail.com</p>
+              <p>
+                <b data-i18n="location">Location</b><br /><span data-i18n="kanchipuram"
+                  >Kanchipuram, Tamil Nadu</span
+                >
+                <span class="muted">[full address — client to share]</span>
+              </p>
+              <p>
+                <b data-i18n="callHours">Call hours</b><br /><span data-i18n="hours"
+                  >Every day, 8 AM – 10 PM</span
+                >
+              </p>
+            </div>
+            <div class="box" id="get-help">
+              <h3 data-i18n="helpTitle">Ask for help</h3>
+              <p data-i18n="helpWho">
+                For yourself or for someone you know. [Who the trust can help — scope from the
+                trust]
+              </p>
+              <p class="muted" data-i18n="helpHow">
+                Tell us briefly what is needed. We will call you back. Submitting a request does not
+                guarantee help.
+              </p>
+              <div class="row">
+                <a class="btn" href="#get-help" data-i18n="getHelp">Get Help</a
+                ><a class="btn" href="#whatsapp" data-i18n="whatsapp">WhatsApp</a>
+              </div>
+              <p class="note">
+                Get Help is the secondary style everywhere (never looks like Donate). Opens the Get
+                Help panel (#8).
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10. FINAL DONATE BAND (+ how it works) -->
+      <section id="donate">
+        <div class="wrap">
+          <span class="label">10 · Final donate band — includes "how it works"</span>
+          <div class="cta">
+            <h2 data-i18n="ctaTitle">[Draft: "Your contribution can change a life."]</h2>
+            <div class="seg" role="group" aria-label="Frequency">
+              <span class="on" data-i18n="once">Once</span><span data-i18n="monthly">Monthly</span>
+            </div>
+            <div class="row" style="margin: 14px 0">
+              <span class="chip">₹500</span><span class="chip">₹1,000</span
+              ><span class="chip">₹2,000</span><span class="chip">₹5,000</span
+              ><span class="chip" data-i18n="otherAmount">Other</span>
+            </div>
+            <a class="btn" href="#donate" data-i18n="donateNow">Donate now</a>
+            <p class="trustline" data-i18n="trustLine">
+              🔒 Secure payment via Razorpay · UPI, cards, netbanking · Acknowledgement after
+              verified payment
+            </p>
+            <div class="steps">
+              <div data-i18n="step1">Choose a need</div>
+              <div data-i18n="step2">Choose an amount</div>
+              <div data-i18n="step3">Pay securely</div>
+              <div data-i18n="step4">Get an acknowledgement</div>
+            </div>
+            <p class="note">
+              Choosing an amount opens the donate panel pre-filled. Custom amounts from ₹1. Same
+              primary Donate style as the hero.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- 11. FOOTER -->
     <footer>
       <div class="wrap">
-        <span class="label">12 · Footer</span>
+        <span class="label">11 · Footer</span>
         <div class="grid cols">
           <div>
             <b>[Trust legal name — #1]</b>
@@ -723,20 +913,128 @@
             <p class="muted">[Registration particulars — verified only]</p>
           </div>
           <div>
-            <b>Explore</b>
-            <p>About<br />Ways we help<br />Impact<br />Transparency<br />FAQ</p>
+            <b data-i18n="explore">Explore</b>
+            <p>
+              <span data-i18n="navAbout">About</span><br /><span data-i18n="navWays"
+                >Ways we help</span
+              ><br /><span data-i18n="navImpact">Impact</span><br /><span
+                data-i18n="navTransparency"
+                >Transparency</span
+              >
+            </p>
           </div>
           <div>
-            <b>Help</b>
-            <p>Get Help<br />Contact<br />Receipt help</p>
+            <b data-i18n="helpCol">Help</b>
+            <p>
+              <span data-i18n="getHelp">Get Help</span><br /><span data-i18n="navContact"
+                >Contact</span
+              ><br /><span data-i18n="receiptHelp">Receipt help</span>
+            </p>
           </div>
           <div>
-            <b>Legal</b>
-            <p>Terms<br />Privacy<br />Refund &amp; cancellation<br />தமிழ் | English</p>
+            <b data-i18n="legal">Legal</b>
+            <p>
+              <span data-i18n="terms">Terms</span><br /><span data-i18n="privacy">Privacy</span
+              ><br /><span data-i18n="refund">Refund &amp; cancellation</span>
+            </p>
           </div>
         </div>
         <p class="muted" style="margin-top: 12px">© [year] [Trust legal name]</p>
       </div>
     </footer>
+
+    <!-- Floating WhatsApp / call button: mobile and tablet only -->
+    <a class="fab" id="whatsapp" href="#whatsapp" aria-label="WhatsApp or call the trust"
+      ><span aria-hidden="true" style="font-size: 24px">💬</span></a
+    >
+
+    <script>
+      // Interface text in Tamil so real Tamil lengths are tested. Draft translations — final copy is reviewed by the trust.
+      const ta = {
+        skip: 'முதன்மை உள்ளடக்கத்திற்குச் செல்லவும்',
+        trustName: '[அறக்கட்டளையின் பெயர் — #1]',
+        navAbout: 'எங்களைப் பற்றி',
+        navWays: 'உதவிகள்',
+        navImpact: 'தாக்கம்',
+        navTransparency: 'வெளிப்படைத்தன்மை',
+        navContact: 'தொடர்பு',
+        langShort: 'EN',
+        langLong: 'English',
+        getHelp: 'உதவி பெற',
+        donate: 'நன்கொடை',
+        menu: ' பட்டியல்',
+        needHelp: 'உதவி தேவையா?',
+        call: 'அழைக்க',
+        askForHelp: 'உதவி கேளுங்கள் →',
+        hours: 'தினமும், காலை 8 – இரவு 10',
+        heroTitle: '[தலைப்பு — வரைவு: "ஒன்றாக இணைந்து நாளைய நல்வாழ்வை உருவாக்குவோம்."]',
+        donateNow: 'இப்போதே நன்கொடை அளியுங்கள்',
+        trustLine:
+          '🔒 Razorpay மூலம் பாதுகாப்பான கட்டணம் · UPI, கார்டு, நெட்பேங்கிங் · கட்டணம் சரிபார்க்கப்பட்ட பிறகு ஒப்புகை',
+        aboutTitle: 'அறக்கட்டளையைப் பற்றி',
+        factArea: 'பகுதி',
+        kanchipuram: 'காஞ்சிபுரம், தமிழ்நாடு',
+        factName: 'சட்டப்பூர்வ பெயர்',
+        factReg: 'பதிவு',
+        factTax: 'வரி ஒப்புதல்',
+        waysTitle: 'நாங்கள் உதவும் வழிகள்',
+        general: 'மிகவும் தேவைப்படும் இடத்திற்கு',
+        generalText: 'மிக அவசரத் தேவைகளுக்கு அறக்கட்டளை பயன்படுத்தும் பொது நன்கொடை.',
+        generalTag: 'பொது நிதி',
+        give: 'நன்கொடை அளிக்க →',
+        education: 'கல்வி',
+        food: 'உணவு மற்றும் அத்தியாவசியப் பொருட்கள்',
+        health: 'மருத்துவ அணுகல்',
+        emergency: 'அவசரகால உதவி',
+        livelihood: 'வாழ்வாதாரம்',
+        other: 'பிற உதவிகள்',
+        helpsTitle: 'ஒரு நன்கொடை எப்படி உதவுகிறது',
+        impactTitle: 'எங்கள் தாக்கம்',
+        nowTitle: 'நாங்கள் இப்போது செய்வது',
+        seeDocs: 'எங்கள் ஆவணங்களைப் பாருங்கள் →',
+        transparencyTitle: 'வெளிப்படைத்தன்மை',
+        download: 'பதிவிறக்கு',
+        faqTitle: 'கேள்விகள்',
+        q1: 'என் நன்கொடை எப்படிப் பயன்படுத்தப்படுகிறது?',
+        q2: 'என் UPI கட்டணம் ஏன் தோல்வியடைந்தது?',
+        q3: 'ஒப்புகை எப்போது கிடைக்கும்?',
+        q4: 'வரி விலக்கு கோர முடியுமா?',
+        q5: 'மாதாந்திர நன்கொடையை எப்படி நிறுத்துவது?',
+        q6: 'என் தகவல்கள் எப்படிப் பயன்படுத்தப்படுகின்றன?',
+        contactTitle: 'எங்களைத் தொடர்பு கொள்ள',
+        phoneWa: 'தொலைபேசி மற்றும் WhatsApp',
+        email: 'மின்னஞ்சல்',
+        location: 'இடம்',
+        callHours: 'அழைப்பு நேரம்',
+        helpTitle: 'உதவி கேளுங்கள்',
+        helpWho:
+          'உங்களுக்காகவோ உங்களுக்குத் தெரிந்தவருக்காகவோ. [அறக்கட்டளை உதவக்கூடியவர்கள் — அறக்கட்டளை வழங்கும்]',
+        helpHow:
+          'தேவையைச் சுருக்கமாகச் சொல்லுங்கள். நாங்கள் உங்களைத் திரும்ப அழைப்போம். கோரிக்கை அனுப்புவது உதவிக்கு உத்தரவாதம் அல்ல.',
+        whatsapp: 'WhatsApp',
+        ctaTitle: '[வரைவு: "உங்கள் பங்களிப்பு ஒரு வாழ்க்கையை மாற்றும்."]',
+        once: 'ஒருமுறை',
+        monthly: 'மாதந்தோறும்',
+        otherAmount: 'வேறு தொகை',
+        step1: 'தேவையைத் தேர்ந்தெடுங்கள்',
+        step2: 'தொகையைத் தேர்ந்தெடுங்கள்',
+        step3: 'பாதுகாப்பாகச் செலுத்துங்கள்',
+        step4: 'ஒப்புகையைப் பெறுங்கள்',
+        explore: 'பார்வையிட',
+        helpCol: 'உதவி',
+        receiptHelp: 'ஒப்புகைச் சீட்டு உதவி',
+        legal: 'சட்டம்',
+        terms: 'விதிமுறைகள்',
+        privacy: 'தனியுரிமை',
+        refund: 'பணம் திரும்பப்பெறுதல் மற்றும் ரத்து',
+      };
+      if (new URLSearchParams(location.search).get('lang') === 'ta') {
+        document.documentElement.lang = 'ta';
+        for (const el of document.querySelectorAll('[data-i18n]')) {
+          const text = ta[el.dataset.i18n];
+          if (text) el.textContent = text;
+        }
+      }
+    </script>
   </body>
 </html>
