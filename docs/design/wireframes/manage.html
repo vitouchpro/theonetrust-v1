@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wireframe — Monthly giving manage link (issue #7)</title>
+    <!--
+      LOW-FIDELITY WIREFRAME. /manage/:token (and /ta/manage/:token): opened from the private link
+      emailed to a monthly donor. No login. No personal data in the URL. Add ?lang=ta for Tamil.
+    -->
+    <link rel="stylesheet" href="wf-states.css" />
+  </head>
+  <body>
+    <div class="page-head">
+      <h1>Monthly giving — manage link (#7)</h1>
+      <p class="muted small">
+        States of the private manage page. The trust's name and logo sit at the top of the real
+        page.
+      </p>
+    </div>
+
+    <div class="gallery">
+      <div>
+        <span class="state-name">A · Active</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="title" data-i18n="yourGift">Your monthly gift</span>
+          </div>
+          <div class="frame-body">
+            <div class="summary">
+              <div>
+                <span data-i18n="status">Status</span><span data-i18n="active">✓ Active</span>
+              </div>
+              <div>
+                <span data-i18n="amount">Amount</span
+                ><span>₹1,000 / <span data-i18n="month">month</span></span>
+              </div>
+              <div>
+                <span data-i18n="need">Need</span
+                ><span data-i18n="general">Where it's needed most</span>
+              </div>
+              <div><span data-i18n="method">Method</span><span>UPI AutoPay</span></div>
+              <div><span data-i18n="next">Next debit</span><span>[date]</span></div>
+            </div>
+            <p class="small muted" data-i18n="pauseNote">
+              To pause a UPI AutoPay gift, use your UPI app. Card and bank mandates can be paused
+              here when supported.
+            </p>
+            <p class="small muted" data-i18n="changeNote">
+              To change the amount, cancel and set up a new monthly gift.
+            </p>
+          </div>
+          <div class="frame-foot">
+            <span class="btn block" data-i18n="cancelGift">Cancel monthly gift</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <span class="state-name">B · Confirm cancel (dialog)</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="title" data-i18n="cancelQ">Cancel your monthly gift?</span
+            ><span class="x" aria-label="Close">✕</span>
+          </div>
+          <div class="frame-body">
+            <p data-i18n="cancelText">
+              No more monthly debits will be made. Past gifts and acknowledgements are not affected.
+            </p>
+          </div>
+          <div class="frame-foot">
+            <span class="btn primary block" data-i18n="yesCancel">Yes, cancel it</span
+            ><span class="btn block" data-i18n="keepGift">Keep my gift</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <span class="state-name">C · Cancelled</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="title" data-i18n="yourGift">Your monthly gift</span>
+          </div>
+          <div class="frame-body">
+            <div class="status">
+              <div class="icon">✓</div>
+              <h2 data-i18n="cancelledTitle">Your monthly gift is cancelled</h2>
+              <p class="muted" data-i18n="cancelledText">
+                Thank you for your support. We've emailed a confirmation.
+              </p>
+            </div>
+            <p class="note">
+              Shown after Razorpay confirms the cancellation. If confirmation is delayed:
+              "Cancelling… we'll email you when it's done."
+            </p>
+          </div>
+          <div class="frame-foot">
+            <span class="btn block" data-i18n="giveAgain">Give again</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <span class="state-name">D · Paused from the donor's UPI app</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="title" data-i18n="yourGift">Your monthly gift</span>
+          </div>
+          <div class="frame-body">
+            <div class="summary">
+              <div>
+                <span data-i18n="status">Status</span
+                ><span data-i18n="paused">⏸ Paused in your UPI app</span>
+              </div>
+            </div>
+            <p class="small" data-i18n="resumeNote">To restart it, resume it in your UPI app.</p>
+            <p class="note">Status follows Razorpay's notice — the site never assumes.</p>
+          </div>
+          <div class="frame-foot">
+            <span class="btn block" data-i18n="cancelGift">Cancel monthly gift</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <span class="state-name">E · Payments failing / halted</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="title" data-i18n="yourGift">Your monthly gift</span>
+          </div>
+          <div class="frame-body">
+            <div class="callout">
+              <b data-i18n="haltedTitle">Your last payment didn't go through</b
+              ><span data-i18n="haltedText"
+                >Your bank or UPI app didn't allow the monthly debit. You can set up a new monthly
+                gift if you'd like to continue.</span
+              >
+            </div>
+          </div>
+          <div class="frame-foot">
+            <span class="btn primary block" data-i18n="setUpAgain">Set up again</span
+            ><span class="btn block" data-i18n="cancelGift">Cancel monthly gift</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <span class="state-name">F · Link invalid or expired</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="title" data-i18n="yourGift">Your monthly gift</span>
+          </div>
+          <div class="frame-body">
+            <div class="status">
+              <div class="icon">?</div>
+              <h2 data-i18n="invalidTitle">This link isn't working</h2>
+              <p class="muted" data-i18n="invalidText">
+                It may be old or copied incorrectly. Contact us and we'll help you manage your gift.
+              </p>
+            </div>
+            <div class="row">
+              <span class="btn">WhatsApp</span><span class="btn">+91 96005 16999</span>
+            </div>
+            <p class="note">
+              Same message whether the token is wrong or expired (no hints for guessing).
+              Rate-limited.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const ta = {
+        yourGift: 'உங்கள் மாதாந்திர நன்கொடை',
+        status: 'நிலை',
+        active: '✓ செயலில் உள்ளது',
+        amount: 'தொகை',
+        month: 'மாதம்',
+        need: 'தேவை',
+        general: 'மிகவும் தேவைப்படும் இடத்திற்கு',
+        method: 'முறை',
+        next: 'அடுத்த பிடித்தம்',
+        pauseNote:
+          'UPI AutoPay நன்கொடையை இடைநிறுத்த உங்கள் UPI செயலியைப் பயன்படுத்தவும். கார்டு மற்றும் வங்கி ஆணைகளை ஆதரிக்கப்படும் இடங்களில் இங்கே இடைநிறுத்தலாம்.',
+        changeNote: 'தொகையை மாற்ற, ரத்து செய்து புதிய மாதாந்திர நன்கொடையை அமைக்கவும்.',
+        cancelGift: 'மாதாந்திர நன்கொடையை ரத்து செய்',
+        cancelQ: 'மாதாந்திர நன்கொடையை ரத்து செய்யவா?',
+        cancelText:
+          'இனி மாதாந்திரப் பிடித்தம் இருக்காது. முந்தைய நன்கொடைகளும் ஒப்புகைகளும் பாதிக்கப்படாது.',
+        yesCancel: 'ஆம், ரத்து செய்',
+        keepGift: 'நன்கொடையைத் தொடர்',
+        cancelledTitle: 'உங்கள் மாதாந்திர நன்கொடை ரத்து செய்யப்பட்டது',
+        cancelledText: 'உங்கள் ஆதரவுக்கு நன்றி. உறுதிப்படுத்தலை மின்னஞ்சலில் அனுப்பியுள்ளோம்.',
+        giveAgain: 'மீண்டும் நன்கொடை அளி',
+        paused: '⏸ உங்கள் UPI செயலியில் இடைநிறுத்தப்பட்டது',
+        resumeNote: 'மீண்டும் தொடங்க, உங்கள் UPI செயலியில் தொடரவும்.',
+        haltedTitle: 'உங்கள் கடைசிக் கட்டணம் நிறைவேறவில்லை',
+        haltedText:
+          'உங்கள் வங்கி அல்லது UPI செயலி மாதாந்திரப் பிடித்தத்தை அனுமதிக்கவில்லை. தொடர விரும்பினால் புதிய மாதாந்திர நன்கொடையை அமைக்கலாம்.',
+        setUpAgain: 'மீண்டும் அமை',
+        invalidTitle: 'இந்த இணைப்பு வேலை செய்யவில்லை',
+        invalidText:
+          'இது பழையதாகவோ தவறாக நகலெடுக்கப்பட்டதாகவோ இருக்கலாம். எங்களைத் தொடர்பு கொள்ளுங்கள், உங்கள் நன்கொடையை நிர்வகிக்க உதவுவோம்.',
+      };
+      if (new URLSearchParams(location.search).get('lang') === 'ta') {
+        document.documentElement.lang = 'ta';
+        for (const el of document.querySelectorAll('[data-i18n]')) {
+          const text = ta[el.dataset.i18n];
+          if (text) el.textContent = text;
+        }
+      }
+    </script>
+  </body>
+</html>

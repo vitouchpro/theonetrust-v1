@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wireframe — Donation acknowledgement page and PDF (issue #7)</title>
+    <!--
+      LOW-FIDELITY WIREFRAME. /receipt/:token (and /ta/receipt/:token): public, shareable, noindex.
+      Shows the MINIMUM: no PAN, phone, email or address — ever. Add ?lang=ta for Tamil.
+    -->
+    <link rel="stylesheet" href="wf-states.css" />
+    <style>
+      .a4 {
+        background: var(--paper);
+        border: 2px solid var(--ink);
+        aspect-ratio: 210 / 297;
+        padding: 28px;
+        display: grid;
+        gap: 14px;
+        align-content: start;
+        font-size: 13px;
+      }
+      .a4 .top {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        border-bottom: 2px solid var(--ink);
+        padding-bottom: 12px;
+      }
+      .a4 .logo {
+        width: 48px;
+        height: 48px;
+        border: 2px solid var(--ink);
+        border-radius: 50%;
+        flex: none;
+      }
+      .a4 .sign {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        gap: 12px;
+        margin-top: 12px;
+      }
+      .a4 .sign .line {
+        border-top: 1px solid var(--ink);
+        padding-top: 4px;
+        min-width: 140px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-head">
+      <h1>Donation acknowledgement — page and PDF (#7)</h1>
+      <p class="muted small">
+        Wording is "Donation acknowledgement" — never "tax receipt" or "Form 114".
+      </p>
+    </div>
+
+    <div class="gallery">
+      <div>
+        <span class="state-name">A · Public acknowledgement page</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="title">[Trust name — #1]</span
+            ><span class="btn" style="min-height: 44px" data-i18n="lang">தமிழ்</span>
+          </div>
+          <div class="frame-body">
+            <div class="status">
+              <div class="icon">✓</div>
+              <h2 data-i18n="ackTitle">Donation acknowledgement</h2>
+              <p class="small muted" data-i18n="verified">
+                Verified against the trust's payment records
+              </p>
+            </div>
+            <div class="summary">
+              <div>
+                <span data-i18n="ackNo">Acknowledgement no.</span><span>[TOT-ACK-0001]</span>
+              </div>
+              <div><span data-i18n="date">Date</span><span>[31 Oct 2026]</span></div>
+              <div><span data-i18n="amount">Amount</span><span>₹1,000</span></div>
+              <div>
+                <span data-i18n="purpose">Purpose</span
+                ><span data-i18n="general">Where it's needed most</span>
+              </div>
+              <div>
+                <span data-i18n="donor">Donor</span
+                ><span data-i18n="private">[Name — or "Kept private"]</span>
+              </div>
+            </div>
+            <span class="btn primary block" data-i18n="download">Download PDF</span>
+            <span class="btn block" data-i18n="share">Share</span>
+            <p class="note">
+              Donor name shown only if the donor did not choose "Don't show my name publicly". No
+              PAN, phone, email, address or full payment ID. Page is noindex.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <span class="state-name">B · Link invalid</span>
+        <div class="frame">
+          <div class="frame-head"><span class="title">[Trust name — #1]</span></div>
+          <div class="frame-body">
+            <div class="status">
+              <div class="icon">?</div>
+              <h2 data-i18n="invalidTitle">We couldn't find this acknowledgement</h2>
+              <p class="muted" data-i18n="invalidText">
+                Check the link, or contact us with your reference number.
+              </p>
+            </div>
+            <div class="row">
+              <span class="btn">WhatsApp</span><span class="btn">+91 96005 16999</span>
+            </div>
+            <p class="note">
+              Same message for wrong, expired or revoked links (no hints). Rate-limited.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <span class="state-name">C · Corrected / refunded acknowledgement</span>
+        <div class="frame">
+          <div class="frame-head"><span class="title">[Trust name — #1]</span></div>
+          <div class="frame-body">
+            <div class="callout">
+              <b data-i18n="refundedTitle">This donation was refunded</b
+              ><span data-i18n="refundedText"
+                >Refunded on [date]. This acknowledgement is no longer valid.</span
+              >
+            </div>
+            <p class="note">
+              History is never deleted: a correction or refund adds a record, and the public page
+              says so.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <span class="state-name">D · PDF layout (A4)</span>
+        <div class="a4">
+          <div class="top">
+            <span class="logo"></span>
+            <div>
+              <b>[Trust legal name — #1]</b>
+              <div class="muted">[Registration particulars — shown only when verified]</div>
+              <div class="muted">
+                Kanchipuram, Tamil Nadu · +91 96005 16999 · info.theonetrust@gmail.com
+              </div>
+            </div>
+          </div>
+          <h2 style="text-align: center">Donation acknowledgement</h2>
+          <div class="summary">
+            <div><span>Acknowledgement no.</span><span>[TOT-ACK-0001]</span></div>
+            <div><span>Date</span><span>[31 Oct 2026]</span></div>
+            <div><span>Received from</span><span>[Donor name]</span></div>
+            <div><span>Amount</span><span>₹1,000 ([Rupees one thousand only])</span></div>
+            <div><span>Purpose</span><span>Where it's needed most (general fund)</span></div>
+            <div><span>Payment</span><span>UPI · ref ****1234</span></div>
+          </div>
+          <p class="muted">
+            This acknowledges your donation. It is not a statutory tax certificate (Form 114). [Tax
+            section appears only when the trust's approval is confirmed and the donor opted in.]
+          </p>
+          <div class="sign">
+            <div class="qr" aria-label="Verification QR code"></div>
+            <div class="line">[Authorised signatory / digital authorisation]</div>
+          </div>
+          <p class="muted">Verify: theonetrust.in/receipt/[token] · Template v1</p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const ta = {
+        lang: 'English',
+        ackTitle: 'நன்கொடை ஒப்புகை',
+        verified: 'அறக்கட்டளையின் கட்டணப் பதிவுகளுடன் சரிபார்க்கப்பட்டது',
+        ackNo: 'ஒப்புகை எண்',
+        date: 'தேதி',
+        amount: 'தொகை',
+        purpose: 'நோக்கம்',
+        general: 'மிகவும் தேவைப்படும் இடத்திற்கு',
+        donor: 'நன்கொடையாளர்',
+        private: '[பெயர் — அல்லது "தனிப்பட்டது"]',
+        download: 'PDF பதிவிறக்கு',
+        share: 'பகிர்',
+        invalidTitle: 'இந்த ஒப்புகையைக் கண்டறிய முடியவில்லை',
+        invalidText:
+          'இணைப்பைச் சரிபாருங்கள், அல்லது உங்கள் குறிப்பு எண்ணுடன் எங்களைத் தொடர்பு கொள்ளுங்கள்.',
+        refundedTitle: 'இந்த நன்கொடை திருப்பி அளிக்கப்பட்டது',
+        refundedText: '[தேதி] அன்று திருப்பி அளிக்கப்பட்டது. இந்த ஒப்புகை இனி செல்லாது.',
+      };
+      if (new URLSearchParams(location.search).get('lang') === 'ta') {
+        document.documentElement.lang = 'ta';
+        for (const el of document.querySelectorAll('[data-i18n]')) {
+          const text = ta[el.dataset.i18n];
+          if (text) el.textContent = text;
+        }
+      }
+    </script>
+  </body>
+</html>

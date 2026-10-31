@@ -83,6 +83,27 @@ try {
                 issues.push(`header item "${el.textContent.trim().slice(0, 24)}" is cut off`);
               }
             }
+            // Every button, amount chip and toggle: one line, and its text fits inside it
+            // (panels clip overflow, so a too-long label would be silently cut off).
+            for (const el of doc.querySelectorAll('.btn, .chip, .seg span')) {
+              const box = el.getBoundingClientRect();
+              if (box.width === 0) continue;
+              const label = el.textContent.trim().slice(0, 28);
+              // Full-width buttons may use two lines for long Tamil labels; everything else one.
+              const maxLines = el.classList.contains('block') ? 2 : 1;
+              const lines = textLines(el);
+              if (lines > maxLines)
+                issues.push(`control "${label}" wraps (${lines} lines, max ${maxLines})`);
+              if (el.scrollWidth > el.clientWidth + 1) {
+                issues.push(
+                  `control "${label}" text is cut off (${el.scrollWidth} > ${el.clientWidth})`,
+                );
+              }
+              const clip = el.closest('.frame');
+              if (clip && box.right > clip.getBoundingClientRect().right + 1) {
+                issues.push(`control "${label}" sticks out of its panel`);
+              }
+            }
             return issues;
           },
           { maxRow: MAX_HEADER_ROW, maxControl: MAX_CONTROL },
@@ -108,5 +129,5 @@ if (problems.length) {
   process.exit(1);
 }
 console.log(
-  `\n✔ No overflow or header wrapping in ${languages.length} languages × ${widths.length} widths`,
+  `\n✔ No overflow, header wrapping or broken controls in ${languages.length} languages × ${widths.length} widths`,
 );

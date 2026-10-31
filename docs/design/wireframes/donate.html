@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Wireframe — Donate panel and payment states (issue #7)</title>
+    <!--
+      LOW-FIDELITY WIREFRAME. Every state of the donate panel on the single page (ADR 0005).
+      Real site: a full-height sheet on phones, a 480px side panel on desktop, opened by #donate.
+      [Square brackets] = placeholder or unverified content. Add ?lang=ta for Tamil.
+    -->
+    <link rel="stylesheet" href="wf-states.css" />
+  </head>
+  <body>
+    <div class="page-head">
+      <h1>Donate panel — all states (#7)</h1>
+      <p class="muted small">
+        Each frame below is one screen of the same panel. Order follows the donor's path.
+      </p>
+    </div>
+
+    <div class="gallery">
+      <!-- A. STEP 1: NEED -->
+      <div>
+        <span class="state-name">A · Step 1 of 4 — choose a need</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="title" data-i18n="donate">Donate</span
+            ><span class="x" aria-label="Close">✕</span>
+          </div>
+          <div class="frame-body">
+            <div class="progress" aria-label="Step 1 of 4">
+              <i class="on"></i><i></i><i></i><i></i>
+            </div>
+            <div class="small muted step-text"><span data-i18n="step">Step</span> 1 / 4</div>
+            <h2 data-i18n="whereGo">Where should your gift go?</h2>
+            <div class="option on">
+              <span class="radio on"></span>
+              <div>
+                <b data-i18n="general">Where it's needed most</b>
+                <div class="small muted" data-i18n="generalText">
+                  General fund — used for the most urgent needs.
+                </div>
+              </div>
+            </div>
+            <div class="option">
+              <span class="radio"></span><b data-i18n="education">Education</b>
+            </div>
+            <div class="option">
+              <span class="radio"></span><b data-i18n="food">Food &amp; essentials</b>
+            </div>
+            <div class="option">
+              <span class="radio"></span><b data-i18n="health">Health access</b>
+            </div>
+            <div class="option">
+              <span class="radio"></span><b data-i18n="emergency">Emergency support</b>
+            </div>
+            <div class="option">
+              <span class="radio"></span><b data-i18n="livelihood">Livelihood</b>
+            </div>
+            <div class="option">
+              <span class="radio"></span><b data-i18n="otherHelp">Other help</b>
+            </div>
+            <p class="note">
+              Pre-selected when opened from a Ways-we-help card. Each option states general vs
+              earmarked once the trust confirms its accounting.
+            </p>
+          </div>
+          <div class="frame-foot">
+            <span class="btn primary block" data-i18n="continue">Continue</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- B. STEP 2: AMOUNT -->
+      <div>
+        <span class="state-name">B · Step 2 of 4 — amount</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="btn link" data-i18n="back">← Back</span><span class="title"></span
+            ><span class="x" aria-label="Close">✕</span>
+          </div>
+          <div class="frame-body">
+            <div class="progress"><i class="on"></i><i class="on"></i><i></i><i></i></div>
+            <div class="small muted step-text"><span data-i18n="step">Step</span> 2 / 4</div>
+            <h2 data-i18n="howMuch">How much would you like to give?</h2>
+            <div class="seg" role="radiogroup">
+              <span class="on" data-i18n="once">Once</span><span data-i18n="monthly">Monthly</span>
+            </div>
+            <div class="chips">
+              <span class="chip">₹500</span><span class="chip on">₹1,000</span
+              ><span class="chip">₹2,000</span> <span class="chip">₹5,000</span
+              ><span class="chip" data-i18n="otherAmount">Other</span>
+            </div>
+            <div class="field">
+              <label data-i18n="customAmount">Other amount (₹)</label>
+              <div class="input">₹ 1,000</div>
+              <div class="hint" data-i18n="minAmount">Any amount from ₹1</div>
+            </div>
+            <div class="option">
+              <span class="check"></span>
+              <div>
+                <b data-i18n="coverFee">Add ₹[fee] to cover the payment fee</b>
+                <div class="small muted" data-i18n="coverFeeHint">
+                  Optional. So the trust receives your full gift.
+                </div>
+              </div>
+            </div>
+            <div class="callout">
+              <b data-i18n="methodsTitle">Ways to pay</b
+              ><span data-i18n="methodsText"
+                >UPI up to ₹1,00,000 per payment (your bank may allow less). Card or netbanking for
+                any amount. Bank transfer for large gifts.</span
+              >
+            </div>
+            <p class="note">
+              Fee shown from the owner's fee table (never hard-coded). Monthly switches to the
+              consent screen (L) before payment.
+            </p>
+          </div>
+          <div class="frame-foot">
+            <span class="btn primary block" data-i18n="continue">Continue</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- C. STEP 3: DETAILS (with validation) -->
+      <div>
+        <span class="state-name">C · Step 3 of 4 — your details (with an error)</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="btn link" data-i18n="back">← Back</span><span class="title"></span
+            ><span class="x" aria-label="Close">✕</span>
+          </div>
+          <div class="frame-body">
+            <div class="progress">
+              <i class="on"></i><i class="on"></i><i class="on"></i><i></i>
+            </div>
+            <div class="small muted step-text"><span data-i18n="step">Step</span> 3 / 4</div>
+            <h2 data-i18n="yourDetails">Your details</h2>
+            <p class="small muted" data-i18n="detailsWhy">
+              Kept private. The trust keeps a record of every donor.
+            </p>
+            <div class="field">
+              <label data-i18n="fullName">Full name</label>
+              <div class="input">[Name]</div>
+            </div>
+            <div class="field">
+              <label data-i18n="mobile">Mobile number</label>
+              <div class="input error">98765</div>
+              <div class="error-text" data-i18n="mobileError">Enter a 10-digit mobile number</div>
+            </div>
+            <div class="field">
+              <label
+                ><span data-i18n="email">Email</span>
+                <span class="muted small" data-i18n="optional">(optional)</span></label
+              >
+              <div class="input">[email]</div>
+            </div>
+            <div class="option on">
+              <span class="check on"></span>
+              <div>
+                <b data-i18n="ackOpt">Send me a donation acknowledgement</b>
+                <div class="small muted" data-i18n="ackHint">
+                  Offered from ₹500. Download link after payment; email only if you add one.
+                </div>
+              </div>
+            </div>
+            <div class="option">
+              <span class="check"></span><b data-i18n="hideName">Don't show my name publicly</b>
+            </div>
+            <p class="note">
+              Tax-benefit option (PAN + address) appears here ONLY when the owner turns tax features
+              on after CA confirmation. Hidden at launch. Errors are announced to screen readers and
+              keep everything typed.
+            </p>
+          </div>
+          <div class="frame-foot">
+            <span class="btn primary block" data-i18n="continue">Continue</span
+            ><span class="small muted"
+              ><span data-i18n="privacyLine">How we use your information:</span>
+              <u data-i18n="privacy">Privacy</u></span
+            >
+          </div>
+        </div>
+      </div>
+
+      <!-- D. STEP 4: REVIEW & PAY -->
+      <div>
+        <span class="state-name">D · Step 4 of 4 — review and pay</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="btn link" data-i18n="back">← Back</span><span class="title"></span
+            ><span class="x" aria-label="Close">✕</span>
+          </div>
+          <div class="frame-body">
+            <div class="progress">
+              <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i>
+            </div>
+            <div class="small muted step-text"><span data-i18n="step">Step</span> 4 / 4</div>
+            <h2 data-i18n="review">Check and pay</h2>
+            <div class="summary">
+              <div>
+                <span data-i18n="sumNeed">Need</span
+                ><span data-i18n="general">Where it's needed most</span>
+              </div>
+              <div>
+                <span data-i18n="sumAmount">Amount</span
+                ><span>₹1,000 · <span data-i18n="once">Once</span></span>
+              </div>
+              <div><span data-i18n="sumName">Name</span><span>[Name]</span></div>
+            </div>
+            <p class="trustline" data-i18n="trustLine">
+              🔒 Secure payment via Razorpay · UPI QR or app, card, netbanking
+            </p>
+            <a class="textlink" href="#k" data-i18n="bankTransferLink"
+              >Giving a large amount? Pay by bank transfer</a
+            >
+          </div>
+          <div class="frame-foot">
+            <span class="btn primary block" data-i18n="payNow">Pay ₹1,000 securely</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- E. PROCESSING -->
+      <div>
+        <span class="state-name">E · Processing (after Razorpay returns)</span>
+        <div class="frame">
+          <div class="frame-head"><span class="title" data-i18n="donate">Donate</span></div>
+          <div class="frame-body">
+            <div class="status" role="status">
+              <div class="spinner"></div>
+              <h2 data-i18n="confirming">Confirming your payment…</h2>
+              <p class="muted" data-i18n="dontClose">Please don't close this page or pay again.</p>
+            </div>
+            <p class="note">
+              No close button while confirming. Pay button disabled during this state (no double
+              payment). Announced via a live region.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- F. SUCCESS (VERIFIED) -->
+      <div>
+        <span class="state-name">F · Success — only after server verification</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="title" data-i18n="donate">Donate</span
+            ><span class="x" aria-label="Close">✕</span>
+          </div>
+          <div class="frame-body">
+            <div class="status">
+              <div class="icon">✓</div>
+              <h2 data-i18n="thanks">Thank you — payment received</h2>
+            </div>
+            <div class="summary">
+              <div><span data-i18n="sumAmount">Amount</span><span>₹1,000</span></div>
+              <div>
+                <span data-i18n="sumNeed">Need</span
+                ><span data-i18n="general">Where it's needed most</span>
+              </div>
+              <div><span data-i18n="reference">Reference</span><span>[TOT-XXXX]</span></div>
+            </div>
+            <span class="btn block" data-i18n="downloadAck">Download acknowledgement</span>
+            <span class="btn block" data-i18n="shareAck">Share acknowledgement link</span>
+            <p class="small muted" data-i18n="emailed">We've also emailed it to you.</p>
+            <p class="note">
+              Acknowledgement buttons only when amount ≥ threshold (owner setting, default ₹500) and
+              the donor asked. "Emailed" line only when an email was given with consent. Never says
+              "tax receipt".
+            </p>
+          </div>
+          <div class="frame-foot">
+            <span class="btn primary block" data-i18n="backToPage">Back to the page</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- G. PENDING VERIFICATION -->
+      <div>
+        <span class="state-name">G · Pending verification</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="title" data-i18n="donate">Donate</span
+            ><span class="x" aria-label="Close">✕</span>
+          </div>
+          <div class="frame-body">
+            <div class="status">
+              <div class="icon">⏳</div>
+              <h2 data-i18n="pending">We're confirming your payment</h2>
+              <p data-i18n="dontPayAgain">
+                <b>Please don't pay again.</b> This can take a few minutes.
+              </p>
+            </div>
+            <div class="summary">
+              <div><span data-i18n="reference">Reference</span><span>[TOT-XXXX]</span></div>
+            </div>
+            <span class="btn primary block" data-i18n="checkAgain">Check again</span>
+            <p class="small muted" data-i18n="pendingHelp">
+              If money left your account and this doesn't change, contact us with this reference.
+            </p>
+            <div class="row">
+              <span class="btn">WhatsApp</span><span class="btn">+91 96005 16999</span>
+            </div>
+            <p class="note">
+              Never shows success until the server verifies. Refreshing re-checks safely (private
+              status token in this tab only). If the tab is closed, the acknowledgement arrives by
+              email when verified.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- H. FAILED -->
+      <div>
+        <span class="state-name">H · Payment failed</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="title" data-i18n="donate">Donate</span
+            ><span class="x" aria-label="Close">✕</span>
+          </div>
+          <div class="frame-body">
+            <div class="status">
+              <div class="icon">!</div>
+              <h2 data-i18n="failed">Payment didn't go through</h2>
+              <p class="muted" data-i18n="failedText">
+                Your details are kept. You can try again or use another way to pay.
+              </p>
+            </div>
+            <span class="btn primary block" data-i18n="tryAgain">Try again</span>
+            <span class="btn block" data-i18n="otherMethod"
+              >Use card, netbanking or bank transfer</span
+            >
+            <p class="small muted" data-i18n="failedHelp">
+              If money left your account, contact us with reference [TOT-XXXX].
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- I. CANCELLED -->
+      <div>
+        <span class="state-name">I · Cancelled in Razorpay — back to review</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="btn link" data-i18n="back">← Back</span><span class="title"></span
+            ><span class="x" aria-label="Close">✕</span>
+          </div>
+          <div class="frame-body">
+            <div class="callout" role="status">
+              <b data-i18n="cancelled">Payment cancelled</b
+              ><span data-i18n="cancelledText">Nothing was charged. Your choices are kept.</span>
+            </div>
+            <div class="summary">
+              <div>
+                <span data-i18n="sumNeed">Need</span
+                ><span data-i18n="general">Where it's needed most</span>
+              </div>
+              <div><span data-i18n="sumAmount">Amount</span><span>₹1,000</span></div>
+            </div>
+          </div>
+          <div class="frame-foot">
+            <span class="btn primary block" data-i18n="payNow">Pay ₹1,000 securely</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- J. UPI LIMIT HELP -->
+      <div>
+        <span class="state-name">J · UPI limit reached</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="title" data-i18n="donate">Donate</span
+            ><span class="x" aria-label="Close">✕</span>
+          </div>
+          <div class="frame-body">
+            <div class="status">
+              <div class="icon">i</div>
+              <h2 data-i18n="limitTitle">Your UPI app or bank didn't allow this amount</h2>
+            </div>
+            <p class="small" data-i18n="limitText">
+              Banks set their own UPI limits. New UPI users may be limited to ₹5,000 in the first 24
+              hours.
+            </p>
+            <span class="btn block" data-i18n="payCard">Pay by card or netbanking</span>
+            <span class="btn block" data-i18n="payBank">Pay by bank transfer</span>
+            <span class="btn block" data-i18n="smaller">Give a smaller amount by UPI</span>
+            <p class="note">
+              Shown when Razorpay reports a limit-type UPI error. Amount and details are kept.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- K. BANK TRANSFER -->
+      <div>
+        <span class="state-name">K · Bank transfer (large gifts)</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="btn link" data-i18n="back">← Back</span><span class="title"></span
+            ><span class="x" aria-label="Close">✕</span>
+          </div>
+          <div class="frame-body">
+            <h2 data-i18n="bankTitle">Pay by bank transfer (NEFT / RTGS / IMPS)</h2>
+            <div class="summary">
+              <div><span data-i18n="sumAmount">Amount</span><span>₹1,50,000</span></div>
+              <div>
+                <span data-i18n="accName">Account name</span><span>[Trust account name — #1]</span>
+              </div>
+              <div>
+                <span data-i18n="accNo">Account number</span
+                ><span>[Unique account for this gift / trust account]</span>
+              </div>
+              <div><span>IFSC</span><span>[IFSC]</span></div>
+              <div><span data-i18n="reference">Reference</span><span>[TOT-XXXX]</span></div>
+            </div>
+            <div class="callout">
+              <b data-i18n="notYet">Not confirmed yet</b
+              ><span data-i18n="bankText"
+                >We confirm your gift when the transfer reaches the trust's account, then send your
+                acknowledgement.</span
+              >
+            </div>
+            <div class="field">
+              <label
+                ><span data-i18n="utr">Bank reference (UTR)</span>
+                <span class="muted small" data-i18n="optional">(optional)</span></label
+              >
+              <div class="input">[UTR]</div>
+              <div class="hint" data-i18n="utrHint">
+                Helps us find your transfer. It does not confirm the payment by itself.
+              </div>
+            </div>
+            <p class="note">
+              With Razorpay Smart Collect [CONFIRM]: a unique account number per gift, matched
+              automatically. Without it: trust bank details + reference; the owner confirms against
+              the bank statement (second confirmation, audited).
+            </p>
+          </div>
+          <div class="frame-foot">
+            <span class="btn primary block" data-i18n="doneTransfer">I've made the transfer</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- L. MONTHLY CONSENT -->
+      <div>
+        <span class="state-name">L · Monthly giving — consent</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="btn link" data-i18n="back">← Back</span><span class="title"></span
+            ><span class="x" aria-label="Close">✕</span>
+          </div>
+          <div class="frame-body">
+            <h2 data-i18n="monthlyTitle">Set up your monthly gift</h2>
+            <div class="summary">
+              <div>
+                <span data-i18n="sumAmount">Amount</span
+                ><span>₹1,000 / <span data-i18n="month">month</span></span>
+              </div>
+              <div><span data-i18n="starts">Starts</span><span data-i18n="today">Today</span></div>
+              <div>
+                <span data-i18n="sumNeed">Need</span
+                ><span data-i18n="general">Where it's needed most</span>
+              </div>
+            </div>
+            <ul class="small" style="margin: 0; padding-left: 18px">
+              <li data-i18n="m1">
+                Up to ₹15,000 a month: UPI AutoPay. Above that: card or bank mandate.
+              </li>
+              <li data-i18n="m2">
+                For UPI AutoPay, your bank sends a notice 24 hours before each debit.
+              </li>
+              <li data-i18n="m3">
+                Cancel any time — from the link we email you, or in your UPI app.
+              </li>
+            </ul>
+            <div class="callout small" data-i18n="psp">
+              PhonePe and BHIM don't support UPI mandates above ₹15,000. Use Google Pay, Paytm,
+              Amazon Pay, a card or a bank mandate.
+            </div>
+            <div class="option on">
+              <span class="check on"></span
+              ><b data-i18n="agree">I agree to a monthly debit of ₹1,000 until I cancel</b>
+            </div>
+          </div>
+          <div class="frame-foot">
+            <span class="btn primary block" data-i18n="setUp">Set up monthly gift</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- M. MONTHLY SUCCESS -->
+      <div>
+        <span class="state-name">M · Monthly giving — active</span>
+        <div class="frame">
+          <div class="frame-head">
+            <span class="title" data-i18n="donate">Donate</span
+            ><span class="x" aria-label="Close">✕</span>
+          </div>
+          <div class="frame-body">
+            <div class="status">
+              <div class="icon">✓</div>
+              <h2 data-i18n="monthlyActive">Your monthly gift is set up</h2>
+              <p class="muted" data-i18n="monthlyActiveText">
+                ₹1,000 every month. We've sent you a private link to manage or cancel it.
+              </p>
+            </div>
+            <p class="note">
+              Shown only after the mandate is authorised and verified. Each month's charge is its
+              own payment record.
+            </p>
+          </div>
+          <div class="frame-foot">
+            <span class="btn primary block" data-i18n="backToPage">Back to the page</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const ta = {
+        donate: 'நன்கொடை',
+        whereGo: 'உங்கள் நன்கொடை எங்கு செல்ல வேண்டும்?',
+        general: 'மிகவும் தேவைப்படும் இடத்திற்கு',
+        generalText: 'பொது நிதி — மிக அவசரத் தேவைகளுக்குப் பயன்படுத்தப்படும்.',
+        education: 'கல்வி',
+        food: 'உணவு மற்றும் அத்தியாவசியப் பொருட்கள்',
+        health: 'மருத்துவ அணுகல்',
+        emergency: 'அவசரகால உதவி',
+        livelihood: 'வாழ்வாதாரம்',
+        otherHelp: 'பிற உதவிகள்',
+        step: 'படி',
+        continue: 'தொடரவும்',
+        back: '← பின்செல்',
+        howMuch: 'எவ்வளவு நன்கொடை அளிக்க விரும்புகிறீர்கள்?',
+        once: 'ஒருமுறை',
+        monthly: 'மாதந்தோறும்',
+        otherAmount: 'வேறு தொகை',
+        customAmount: 'வேறு தொகை (₹)',
+        minAmount: '₹1 முதல் எந்தத் தொகையும்',
+        coverFee: 'கட்டணச் செலவுக்கு ₹[fee] சேர்க்கவும்',
+        coverFeeHint: 'விருப்பத்திற்குரியது. அறக்கட்டளைக்கு முழுத் தொகையும் கிடைக்கும்.',
+        methodsTitle: 'செலுத்தும் வழிகள்',
+        methodsText:
+          'UPI மூலம் ஒரு முறைக்கு ₹1,00,000 வரை (உங்கள் வங்கி குறைவாக அனுமதிக்கலாம்). எந்தத் தொகைக்கும் கார்டு அல்லது நெட்பேங்கிங். பெரிய தொகைகளுக்கு வங்கிப் பரிமாற்றம்.',
+        yourDetails: 'உங்கள் விவரங்கள்',
+        detailsWhy:
+          'தனிப்பட்டதாக வைக்கப்படும். ஒவ்வொரு நன்கொடையாளரின் பதிவையும் அறக்கட்டளை வைத்திருக்கும்.',
+        fullName: 'முழுப் பெயர்',
+        mobile: 'கைபேசி எண்',
+        mobileError: '10 இலக்க கைபேசி எண்ணை உள்ளிடவும்',
+        email: 'மின்னஞ்சல்',
+        optional: '(விருப்பத்திற்குரியது)',
+        ackOpt: 'எனக்கு நன்கொடை ஒப்புகையை அனுப்பவும்',
+        ackHint:
+          '₹500 முதல். கட்டணத்திற்குப் பிறகு பதிவிறக்க இணைப்பு; மின்னஞ்சல் கொடுத்தால் மட்டுமே மின்னஞ்சல்.',
+        hideName: 'என் பெயரைப் பொதுவில் காட்ட வேண்டாம்',
+        privacyLine: 'உங்கள் தகவல்களை நாங்கள் பயன்படுத்தும் விதம்:',
+        privacy: 'தனியுரிமை',
+        review: 'சரிபார்த்துச் செலுத்துங்கள்',
+        sumNeed: 'தேவை',
+        sumAmount: 'தொகை',
+        sumName: 'பெயர்',
+        trustLine:
+          '🔒 Razorpay மூலம் பாதுகாப்பான கட்டணம் · UPI QR அல்லது செயலி, கார்டு, நெட்பேங்கிங்',
+        bankTransferLink: 'பெரிய தொகையா? வங்கிப் பரிமாற்றம் மூலம் செலுத்துங்கள்',
+        payNow: '₹1,000 பாதுகாப்பாகச் செலுத்து',
+        confirming: 'உங்கள் கட்டணத்தை உறுதிப்படுத்துகிறோம்…',
+        dontClose: 'இந்தப் பக்கத்தை மூட வேண்டாம், மீண்டும் செலுத்த வேண்டாம்.',
+        thanks: 'நன்றி — கட்டணம் பெறப்பட்டது',
+        reference: 'குறிப்பு எண்',
+        downloadAck: 'ஒப்புகையைப் பதிவிறக்கு',
+        shareAck: 'ஒப்புகை இணைப்பைப் பகிர்',
+        emailed: 'இதை உங்களுக்கு மின்னஞ்சலிலும் அனுப்பியுள்ளோம்.',
+        backToPage: 'பக்கத்திற்குத் திரும்பு',
+        pending: 'உங்கள் கட்டணத்தை உறுதிப்படுத்திக்கொண்டிருக்கிறோம்',
+        dontPayAgain: 'மீண்டும் செலுத்த வேண்டாம். இதற்குச் சில நிமிடங்கள் ஆகலாம்.',
+        checkAgain: 'மீண்டும் சரிபார்',
+        pendingHelp:
+          'உங்கள் கணக்கிலிருந்து பணம் போய், இது மாறவில்லை என்றால், இந்தக் குறிப்பு எண்ணுடன் எங்களைத் தொடர்பு கொள்ளுங்கள்.',
+        failed: 'கட்டணம் நிறைவேறவில்லை',
+        failedText:
+          'உங்கள் விவரங்கள் சேமிக்கப்பட்டுள்ளன. மீண்டும் முயற்சிக்கலாம் அல்லது வேறு வழியில் செலுத்தலாம்.',
+        tryAgain: 'மீண்டும் முயற்சி செய்',
+        otherMethod: 'கார்டு, நெட்பேங்கிங் அல்லது வங்கிப் பரிமாற்றம்',
+        failedHelp:
+          'உங்கள் கணக்கிலிருந்து பணம் போயிருந்தால், [TOT-XXXX] என்ற குறிப்பு எண்ணுடன் தொடர்பு கொள்ளுங்கள்.',
+        cancelled: 'கட்டணம் ரத்து செய்யப்பட்டது',
+        cancelledText: 'எந்தத் தொகையும் எடுக்கப்படவில்லை. உங்கள் தேர்வுகள் சேமிக்கப்பட்டுள்ளன.',
+        limitTitle: 'உங்கள் UPI செயலி அல்லது வங்கி இந்தத் தொகையை அனுமதிக்கவில்லை',
+        limitText:
+          'ஒவ்வொரு வங்கியும் தனது UPI வரம்பை நிர்ணயிக்கிறது. புதிய UPI பயனர்களுக்கு முதல் 24 மணி நேரத்தில் ₹5,000 வரம்பு இருக்கலாம்.',
+        payCard: 'கார்டு அல்லது நெட்பேங்கிங்',
+        payBank: 'வங்கிப் பரிமாற்றம்',
+        smaller: 'UPI மூலம் சிறிய தொகை',
+        bankTitle: 'வங்கிப் பரிமாற்றம் மூலம் செலுத்துங்கள் (NEFT / RTGS / IMPS)',
+        accName: 'கணக்குப் பெயர்',
+        accNo: 'கணக்கு எண்',
+        notYet: 'இன்னும் உறுதிப்படுத்தப்படவில்லை',
+        bankText:
+          'பணம் அறக்கட்டளையின் கணக்கை அடைந்ததும் உங்கள் நன்கொடையை உறுதிப்படுத்தி, ஒப்புகையை அனுப்புவோம்.',
+        utr: 'வங்கிக் குறிப்பு எண் (UTR)',
+        utrHint: 'உங்கள் பரிமாற்றத்தைக் கண்டறிய உதவும். இது மட்டுமே கட்டணத்தை உறுதிப்படுத்தாது.',
+        doneTransfer: 'பரிமாற்றம் செய்துவிட்டேன்',
+        monthlyTitle: 'உங்கள் மாதாந்திர நன்கொடையை அமைக்கவும்',
+        month: 'மாதம்',
+        starts: 'தொடக்கம்',
+        today: 'இன்று',
+        m1: 'மாதம் ₹15,000 வரை: UPI AutoPay. அதற்கு மேல்: கார்டு அல்லது வங்கி ஆணை.',
+        m2: 'UPI AutoPay-க்கு, ஒவ்வொரு பிடித்தத்திற்கும் 24 மணி நேரம் முன் உங்கள் வங்கி அறிவிப்பு அனுப்பும்.',
+        m3: 'எப்போது வேண்டுமானாலும் ரத்து செய்யலாம் — நாங்கள் அனுப்பும் இணைப்பிலிருந்து அல்லது உங்கள் UPI செயலியில்.',
+        psp: 'PhonePe மற்றும் BHIM ₹15,000-க்கு மேலான UPI ஆணைகளை ஆதரிப்பதில்லை. Google Pay, Paytm, Amazon Pay, கார்டு அல்லது வங்கி ஆணையைப் பயன்படுத்தவும்.',
+        agree: 'நான் ரத்து செய்யும் வரை மாதம் ₹1,000 பிடித்தம் செய்ய ஒப்புக்கொள்கிறேன்',
+        setUp: 'மாதாந்திர நன்கொடையை அமை',
+        monthlyActive: 'உங்கள் மாதாந்திர நன்கொடை அமைக்கப்பட்டது',
+        monthlyActiveText:
+          'ஒவ்வொரு மாதமும் ₹1,000. அதை நிர்வகிக்க அல்லது ரத்து செய்ய ஒரு தனிப்பட்ட இணைப்பை அனுப்பியுள்ளோம்.',
+      };
+      if (new URLSearchParams(location.search).get('lang') === 'ta') {
+        document.documentElement.lang = 'ta';
+        for (const el of document.querySelectorAll('[data-i18n]')) {
+          const text = ta[el.dataset.i18n];
+          if (text) el.textContent = text;
+        }
+      }
+    </script>
+  </body>
+</html>
