@@ -4,12 +4,14 @@ Low-fidelity layouts: **structure only** — section order, content blocks and s
 on purpose; colours, fonts and imagery come from the design tokens (`docs/design/tokens.md`) when
 the real components are built.
 
-| Wireframe                       | Issue | Screenshots (English · Tamil)                                                                                                                                                   |
-| ------------------------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Single page (`/`, `/ta/`)       | #6    | mobile 390: [EN](screenshots/landing-390.png) · [TA](screenshots/landing-390-ta.png) — desktop 1440: [EN](screenshots/landing-1440.png) · [TA](screenshots/landing-1440-ta.png) |
-| Donate panel and payment states | #7    | —                                                                                                                                                                               |
-| Get Help panel                  | #8    | —                                                                                                                                                                               |
-| Owner dashboard                 | #9    | —                                                                                                                                                                               |
+| Wireframe                           | Issue | Screenshots (English · Tamil)                                                                                                                                                   |
+| ----------------------------------- | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Single page (`/`, `/ta/`)           | #6    | mobile 390: [EN](screenshots/landing-390.png) · [TA](screenshots/landing-390-ta.png) — desktop 1440: [EN](screenshots/landing-1440.png) · [TA](screenshots/landing-1440-ta.png) |
+| Donate panel and payment states     | #7    | mobile: [EN](screenshots/donate-390.png) · [TA](screenshots/donate-390-ta.png) — desktop: [EN](screenshots/donate-1440.png) · [TA](screenshots/donate-1440-ta.png)              |
+| Monthly giving manage link          | #7    | mobile: [EN](screenshots/manage-390.png) · [TA](screenshots/manage-390-ta.png) — desktop: [EN](screenshots/manage-1440.png) · [TA](screenshots/manage-1440-ta.png)              |
+| Donation acknowledgement page + PDF | #7    | mobile: [EN](screenshots/receipt-390.png) · [TA](screenshots/receipt-390-ta.png) — desktop: [EN](screenshots/receipt-1440.png) · [TA](screenshots/receipt-1440-ta.png)          |
+| Get Help panel                      | #8    | —                                                                                                                                                                               |
+| Owner dashboard                     | #9    | —                                                                                                                                                                               |
 
 Open the `.html` file in a browser; add `?lang=ta` for Tamil. Interface text is translated (draft
 wording, to be reviewed by the trust) so **real Tamil lengths are tested**; placeholders and engineer
@@ -21,10 +23,47 @@ notes stay in English.
 **English and Tamil at 360, 390, 768, 1366 and 1440px** and fails if:
 
 - the page is wider than the screen, or
-- any header item wraps onto a second line (counted from the real text lines) or is cut off.
+- any header item wraps onto a second line (counted from the real text lines) or is cut off;
+- any button, amount chip or toggle wraps (full-width buttons may use 2 lines for long Tamil
+  labels), has its text cut off, or sticks out of its panel.
 
 It then saves the full-page screenshots above. It was proven against the first draft, where it
 caught the Tamil header wrapping at 1366px and being cut off at 390px.
+
+## Donate panel, manage link and acknowledgement (#7)
+
+The donate panel opens on the single page (`#donate`): a full-height sheet on phones, a 480px side
+panel on desktop. `donate.html` shows every screen as a gallery, in the donor's order:
+
+| State | Screen                           | Key rules                                                                                                                                                                         |
+| ----- | -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| A     | Step 1 — choose a need           | "Where it's needed most" pre-selected; same categories as the page                                                                                                                |
+| B     | Step 2 — amount                  | Once/Monthly; ₹500/₹1,000/₹2,000/₹5,000/Other; any amount from ₹1; optional cover-fee (from the owner's fee table); ways-to-pay guidance (UPI up to ₹1 lakh, bank may allow less) |
+| C     | Step 3 — details (with an error) | Name + mobile required, email optional; acknowledgement offered from ₹500; "don't show my name"; tax option hidden until approval                                                 |
+| D     | Step 4 — review and pay          | Summary, trust line, link to bank transfer for large gifts                                                                                                                        |
+| E     | Processing                       | No close button, no double payment, announced to screen readers                                                                                                                   |
+| F     | Success                          | **Only after server verification**; acknowledgement download/share only above the threshold and on request                                                                        |
+| G     | Pending verification             | "Please don't pay again" + Check again + contact with reference                                                                                                                   |
+| H     | Failed                           | Try again / other ways to pay; details kept                                                                                                                                       |
+| I     | Cancelled                        | Back to review, nothing charged, choices kept                                                                                                                                     |
+| J     | UPI limit reached                | Card/netbanking, bank transfer or a smaller UPI amount; new-user ₹5,000 note                                                                                                      |
+| K     | Bank transfer                    | Amount, account, IFSC, reference; "not confirmed yet"; UTR optional and never proof of payment                                                                                    |
+| L     | Monthly consent                  | ₹15,000 UPI AutoPay limit, 24-hour bank notice, how to cancel, PhonePe/BHIM note, explicit agreement                                                                              |
+| M     | Monthly active                   | Only after the mandate is authorised and verified                                                                                                                                 |
+
+`manage.html` (`/manage/:token`): active · confirm cancel · cancelled · paused in the UPI app ·
+payments failing · invalid link (same message for wrong/expired; rate-limited).
+
+`receipt.html` (`/receipt/:token`): public acknowledgement page with only acknowledgement number,
+date, amount, purpose and donor name (only if not hidden) · invalid link · refunded/corrected ·
+A4 PDF layout ("Donation acknowledgement — not Form 114", verification QR, template version).
+No PAN, phone, email or address on the public page, ever. The PDF is generated in the donor's
+language (English shown; Tamil uses the same layout).
+
+**Senior UX self-review fixes**: visible "Step n / 4" text (not only bars); "Other help" added so
+the panel matches the page; the bank-transfer screen shows the amount to transfer; the large-gift
+line became a text link that can wrap; one long Tamil label no longer widens the panel
+(`min-width: 0`), proven by the control check.
 
 ## Legend
 
