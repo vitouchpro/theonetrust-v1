@@ -5,7 +5,7 @@
  *   - the real page HTML inside #root (search engines and slow phones see content before JS),
  *   - <html lang>, title, description, canonical, hreflang and Open Graph in <head>,
  *   - preload links for the fonts that page needs first.
- * Also writes 404.html (not-found, noindex), sitemap.xml, robots.txt and _headers (#38).
+ * Also writes 404.html (not-found, noindex), sitemap.xml, robots.txt, llms.txt and _headers (#38).
  */
 import { readFileSync, readdirSync, rmSync, mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
@@ -28,8 +28,8 @@ const HOISTED =
 function fontPreloads(lang) {
   const wanted =
     lang === 'ta'
-      ? [/^noto-sans-tamil-tamil-wght-normal-/, /^inter-latin-wght-normal-/]
-      : [/^inter-latin-wght-normal-/, /^playfair-display-latin-wght-normal-/];
+      ? [/^noto-sans-tamil-tamil-wght-normal-/, /^plus-jakarta-sans-latin-wght-normal-/]
+      : [/^plus-jakarta-sans-latin-wght-normal-/];
   return wanted
     .map((re) => fonts.find((f) => re.test(f)))
     .filter(Boolean)
@@ -91,6 +91,7 @@ write(
 );
 write('sitemap.xml', server.buildSitemapXml());
 write('robots.txt', server.buildRobotsTxt());
+write('llms.txt', server.buildLlmsTxt());
 // Security headers for the static host (#38), with the API origin this build talks to.
 const { VITE_API_BASE_URL } = loadEnv('production', webRoot, 'VITE_');
 write(
