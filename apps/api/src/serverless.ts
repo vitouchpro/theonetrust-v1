@@ -21,6 +21,20 @@ app.post('/api/v1/__spike', { config: { rawBody: true } }, async (request) => {
     node: process.version,
   };
 });
+app.get('/api/v1/__spike/ip', async (request) => {
+  const h = request.headers;
+  const mask = (v: unknown) =>
+    typeof v === 'string' ? v.replace(/\d+(?=[.:]?)/g, (d) => 'n'.repeat(d.length)) : v ?? null;
+  return {
+    fastifyIp: mask(request.ip),
+    socket: mask(request.raw.socket.remoteAddress),
+    xff: mask(h['x-forwarded-for']),
+    xffCount: typeof h['x-forwarded-for'] === 'string' ? h['x-forwarded-for'].split(',').length : 0,
+    xRealIp: mask(h['x-real-ip']),
+    xVercelForwardedFor: mask(h['x-vercel-forwarded-for']),
+    sameRealAndVercel: h['x-real-ip'] === h['x-vercel-forwarded-for'],
+  };
+});
 const ready = app.ready();
 
 export default async function handler(req: IncomingMessage, res: ServerResponse): Promise<void> {
