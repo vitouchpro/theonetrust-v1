@@ -86,7 +86,10 @@ write(
   await page(
     '/__not-found__',
     'en',
-    '<title>Page not found · Theonetrust.in</title>\n    <meta name="robots" content="noindex" />',
+    server.headTagsToHtml([
+      { tag: 'title', attrs: {}, text: 'Page not found · Theonetrust.in' },
+      { tag: 'meta', attrs: { name: 'robots', content: 'noindex' } },
+    ]),
   ),
 );
 write('sitemap.xml', server.buildSitemapXml());

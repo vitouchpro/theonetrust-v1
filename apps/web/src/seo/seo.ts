@@ -2,6 +2,8 @@ import type { UiLang } from '../components/ui/ui-strings.ts';
 import { TRUST_FACTS, type TrustFacts } from '../config/trust-facts.ts';
 import { POLICIES } from '../content/policies.ts';
 import { localizedPath } from '../i18n/lang.ts';
+import shareImageEn from '../assets/og/share-en.png';
+import shareImageTa from '../assets/og/share-ta.png';
 
 /**
  * Search and sharing metadata (issue #16). One list drives page titles, descriptions, canonical
@@ -20,6 +22,23 @@ export interface IndexablePage {
 }
 
 const SITE = 'Theonetrust.in';
+
+/**
+ * Link-preview picture per language (built by scripts/og-image.mjs, 1200 × 630). The alt text
+ * repeats the words drawn in the image.
+ */
+export const SHARE_IMAGE = {
+  width: '1200',
+  height: '630',
+  src: { en: shareImageEn, ta: shareImageTa } as Bilingual,
+  alt: {
+    en: 'Theonetrust emblem with the words “Together, we can make a difference.” Kanchipuram, Tamil Nadu',
+    ta: 'Theonetrust சின்னத்துடன் “ஒன்றாகச் சேர்ந்தால், மாற்றம் கொண்டுவர முடியும்.” காஞ்சிபுரம், தமிழ்நாடு',
+  } as Bilingual,
+};
+
+/** Marks the head tags the prerender writes, so the app can remove them when it takes over. */
+export const PRERENDER_HEAD_ATTR = 'data-prerender';
 
 export const INDEXABLE_PAGES: IndexablePage[] = [
   {
@@ -97,19 +116,33 @@ export function headTags(page: IndexablePage, lang: UiLang, origin = SITE_ORIGIN
       tag: 'meta',
       attrs: { property: 'og:locale:alternate', content: HREFLANG[other].replace('-', '_') },
     },
+    {
+      tag: 'meta',
+      attrs: { property: 'og:image', content: absoluteUrl(SHARE_IMAGE.src[lang], origin) },
+    },
+    { tag: 'meta', attrs: { property: 'og:image:width', content: SHARE_IMAGE.width } },
+    { tag: 'meta', attrs: { property: 'og:image:height', content: SHARE_IMAGE.height } },
+    { tag: 'meta', attrs: { property: 'og:image:alt', content: SHARE_IMAGE.alt[lang] } },
+    { tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' } },
   ];
 }
 
 const escapeHtml = (s: string) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
+/**
+ * Static HTML for the prerender. Every tag carries PRERENDER_HEAD_ATTR so the app can drop it
+ * when React renders its own copy (otherwise each tag would appear twice — #151).
+ */
 export function headTagsToHtml(tags: HeadTag[]): string {
   return tags
     .map(({ tag, attrs, text }) => {
       const a = Object.entries(attrs)
         .map(([k, v]) => ` ${k}="${escapeHtml(v)}"`)
         .join('');
-      return tag === 'title' ? `<title>${escapeHtml(text ?? '')}</title>` : `<${tag}${a} />`;
+      return tag === 'title'
+        ? `<title ${PRERENDER_HEAD_ATTR}>${escapeHtml(text ?? '')}</title>`
+        : `<${tag} ${PRERENDER_HEAD_ATTR}${a} />`;
     })
     .join('\n    ');
 }
@@ -220,4 +253,14 @@ export function buildLlmsTxt(
     '',
   );
   return lines.join('\n');
+}
+
+/**
+ * Removes the prerendered head tags. Called once, just before the app renders: React then adds
+ * the tags for the current page and keeps them in step with language and route changes.
+ */
+export function removePrerenderedHead(doc: Document): number {
+  const tags = doc.head.querySelectorAll(`[${PRERENDER_HEAD_ATTR}]`);
+  tags.forEach((tag) => tag.remove());
+  return tags.length;
 }

@@ -2,10 +2,15 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { RouterProvider, createBrowserRouter } from 'react-router';
 import { routes } from './app/routes.tsx';
+import { removePrerenderedHead } from './seo/seo.ts';
 import './styles/global.css';
 
 const container = document.getElementById('root');
 if (!container) throw new Error('Root element #root is missing from index.html');
+
+// The static HTML carries the page's head tags for search engines; React renders its own set from
+// here on (and keeps it right after a language or page change), so drop the static copy (#151).
+removePrerenderedHead(document);
 
 createRoot(container).render(
   <StrictMode>

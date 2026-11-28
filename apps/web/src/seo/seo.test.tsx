@@ -7,6 +7,8 @@ import { TRUST_FACTS } from '../config/trust-facts.ts';
 import {
   DISALLOWED_PATHS,
   INDEXABLE_PAGES,
+  PRERENDER_HEAD_ATTR,
+  SHARE_IMAGE,
   SITE_ORIGIN,
   buildLlmsTxt,
   buildRobotsTxt,
@@ -15,6 +17,7 @@ import {
   headTagsToHtml,
   jsonLdText,
   ngoJsonLd,
+  removePrerenderedHead,
 } from './seo.ts';
 
 afterEach(() => {
@@ -81,9 +84,60 @@ describe('head tags', () => {
       { tag: 'meta', attrs: { name: 'description', content: 'say "hi"' } },
     ]);
     expect(html).toBe(
-      '<title>A &amp; &lt;B&gt;</title>\n    <meta name="description" content="say &quot;hi&quot;" />',
+      '<title data-prerender>A &amp; &lt;B&gt;</title>\n    <meta data-prerender name="description" content="say &quot;hi&quot;" />',
     );
-    expect(headTagsToHtml([{ tag: 'title', attrs: {} }])).toBe('<title></title>');
+    expect(headTagsToHtml([{ tag: 'title', attrs: {} }])).toBe('<title data-prerender></title>');
+  });
+
+  it('marks every prerendered tag so the app can hand over the head (#151)', () => {
+    const html = headTagsToHtml(headTags(home, 'en'));
+    const tags = html.split('\n').map((l) => l.trim());
+    expect(tags).toHaveLength(headTags(home, 'en').length);
+    for (const tag of tags)
+      expect(tag).toMatch(new RegExp(`^<(title|meta|link) ${PRERENDER_HEAD_ATTR}[ >]`));
+  });
+
+  it.each(['en', 'ta'] as const)(
+    'share image (%s): absolute URL, size, alt, large card',
+    (lang) => {
+      const tags = headTags(home, lang);
+      const content = (k: string, v: string) => tags.find((t) => t.attrs[k] === v)?.attrs.content;
+      expect(content('property', 'og:image')).toBe(`${SITE_ORIGIN}${SHARE_IMAGE.src[lang]}`);
+      expect(content('property', 'og:image')).toMatch(/^https:\/\/[^/]+\/.+\.png$/);
+      expect(content('property', 'og:image:width')).toBe('1200');
+      expect(content('property', 'og:image:height')).toBe('630');
+      expect(content('property', 'og:image:alt')).toBe(SHARE_IMAGE.alt[lang]);
+      expect(content('name', 'twitter:card')).toBe('summary_large_image');
+    },
+  );
+
+  it('English and Tamil get their own share image and alt text', () => {
+    expect(SHARE_IMAGE.src.en).not.toBe(SHARE_IMAGE.src.ta);
+    expect(SHARE_IMAGE.alt.ta).toMatch(/[\u0B80-\u0BFF]/);
+    expect(SHARE_IMAGE.alt.en).not.toMatch(/[\u0B80-\u0BFF]/);
+  });
+
+  it('after the hand-over the live page holds one set of tags, for the current page', () => {
+    document.head.innerHTML = headTagsToHtml(headTags(home, 'en'));
+    removePrerenderedHead(document);
+    renderRoute('/ta/privacy');
+    expect(document.head.querySelectorAll('title')).toHaveLength(1);
+    expect(document.head.querySelectorAll('link[rel="canonical"]')).toHaveLength(1);
+    expect(document.head.querySelector('link[rel="canonical"]')).toHaveAttribute(
+      'href',
+      `${SITE_ORIGIN}/ta/privacy`,
+    );
+    expect(document.head.querySelectorAll('meta[property="og:image"]')).toHaveLength(1);
+  });
+
+  it('removePrerenderedHead drops only the marked tags, once', () => {
+    document.head.innerHTML = `<meta charset="UTF-8" /><meta name="theme-color" content="#000" />${headTagsToHtml(headTags(home, 'en'))}`;
+    const before = document.head.children.length;
+    expect(removePrerenderedHead(document)).toBe(before - 2);
+    expect(document.head.querySelector('[data-prerender]')).toBeNull();
+    expect(document.head.querySelector('meta[name="theme-color"]')).not.toBeNull();
+    expect(document.head.querySelector('meta[charset]')).not.toBeNull();
+    expect(removePrerenderedHead(document)).toBe(0);
   });
 
   it('React writes the tags into the document head on the live page', () => {
